@@ -101,7 +101,7 @@ const historyViewController = {
                     special_price_momo: detail.special_price_momo,
                     type: type
                 }
-                const old_item = await HistoryView.findOne({ id: item_id, user_id: user_id, org_id: org_id })
+                const old_item = await HistoryView.findOne({ id: item_id, user_id: user_id, org_id: org_id, type: type })
                 if (old_item) res.status(200).json({ status: true, message: "Item is in history" })
                 if (!old_item) {
                     const newHistoryView = new HistoryView(historyView)

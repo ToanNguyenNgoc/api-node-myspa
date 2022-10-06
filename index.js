@@ -12,6 +12,7 @@ const bannersRoute = require('./router/bannersRoute');
 const tikitokRoute = require('./router/tiktokRoute');
 const authRoute = require('./router/authRoute');
 const userRoute = require('./router/userRoute');
+const historyViewRoute = require('./router/historyViewRoute')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -20,7 +21,17 @@ mongoose.connect((process.env.MONGO_URL), {
 })
 
 app.use(bodyParser.json({ limit: '50mb' }));
-app.use(cors());
+// app.use(cors({
+//     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+//     origin: [
+//         "https://beautyx.vn",
+//         "https://beautyx.vercel.app",
+//         "https://beautyx-spa.web.app",
+//         "http://localhost:3000"
+//     ],
+//     optionsSuccessStatus: 200,
+// }));
+app.use(cors())
 app.use(morgan('common'));
 
 // ROUTER
@@ -29,6 +40,8 @@ app.use('/v1/banners', bannersRoute);
 app.use('/v1/tiktok', tikitokRoute);
 app.use('/v1/auth', authRoute);
 app.use('/v1/users', userRoute);
+app.use('/v1/history', historyViewRoute)
+
 
 
 // app.get('/api', (req, res) => {

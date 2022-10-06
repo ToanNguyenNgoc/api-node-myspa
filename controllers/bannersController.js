@@ -17,7 +17,7 @@ const bannersController = {
             }
             res.status(200).json({ status: true, data: response })
         } catch (error) {
-            res.status(200).json(error)
+            res.status(500).json(error)
         }
     },
     getAllBanner: async (req, res) => {

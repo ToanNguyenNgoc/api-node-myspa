@@ -13,7 +13,7 @@ const bannersTypeController = {
     },
     getBannersType: async (req, res) => {
         try {
-            const response = await BannersType.find();
+            const response = await BannersType.find()
             res.status(200).json({ status: true, data: response })
         } catch (error) {
             res.status(500).json({ status: false, message: JSON.stringify(error) })

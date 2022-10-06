@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const bannersSchema = mongoose.Schema({
     title: {
@@ -33,5 +33,5 @@ const bannersSchema = mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 })
 
-const Banners = mongoose.model("Banners", bannersSchema);
+const Banners = mongoose.model('Banners', bannersSchema);
 module.exports = Banners

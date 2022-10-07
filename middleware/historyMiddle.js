@@ -2,7 +2,7 @@ const axios = require('axios')
 const dotenv = require('dotenv')
 
 dotenv.config();
-const KEY_API = "https://api.myspa.vn"
+const KEY_API = process.env.PAR_API_URL
 
 const verifyUserFromPar = async (req, res) => {
     let profile
@@ -53,6 +53,8 @@ const getServiceInDiscount = async (context) => {
     const productable = await context.items[0].productable
     const service = {
         ...productable,
+        discount_id: context.id,
+        id: productable.id,
         special_price: context.discount_type === "FINAL_PRICE" ?
             context.discount_value : productable.price - context.discount_value
     }

@@ -44,7 +44,8 @@ const historyViewController = {
             if (org && detail) {
                 const historyView = {
                     user_id: user_id,
-                    id: item_id,
+                    id: detail.id,
+                    discount_id: detail.discount_id,
                     name: detail.service_name ?? detail.product_name,
                     category_name: "",
                     price: detail.retail_price ?? detail.price,

@@ -35,7 +35,9 @@ const historyViewController = {
                 status: false,
                 message: "The selected type is invalid"
             })
-            const old_item = await HistoryView.findOne({ id: item_id, user_id: user_id, org_id: org_id, type: type })
+            const old_item = await HistoryView.findOne({ 
+                id: item_id, user_id: user_id, org_id: org_id, type: type 
+            })
             const org = await getOrgDetail(org_id)
             if (!org) return res.status(401).json({ status: false, message: "Can not find organization" })
 
@@ -44,8 +46,8 @@ const historyViewController = {
             if (org && detail) {
                 const historyView = {
                     user_id: user_id,
-                    id: detail.id,
-                    discount_id: detail.discount_id,
+                    id: item_id,
+                    productable_id: detail.id,
                     name: detail.service_name ?? detail.product_name,
                     category_name: "",
                     price: detail.retail_price ?? detail.price,

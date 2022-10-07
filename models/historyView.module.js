@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const historyView = mongoose.Schema({
     user_id: { type: Number, required: true },
     id: { type: Number, required: true },
-    discount_id: { type: Number },
+    productable_id: { type: Number },
     name: { type: String },
     category_name: { type: String },
     price: { type: Number },

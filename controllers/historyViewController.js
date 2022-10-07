@@ -1,57 +1,14 @@
-const axios = require('axios');
-const { json } = require('body-parser');
-const dotenv = require('dotenv')
+const {
+    verifyUserFromPar,
+    getOrgDetail,
+    getProductable
+} = require('../middleware/historyMiddle')
 const HistoryView = require('../models/historyView.module')
 
-const typeArr = ["ORGANIZATION", "PRODUCT", "SERVICE"]
-dotenv.config();
-const KEY_API = process.env.PAR_API_URL
+const typeArr = ["SERVICE", "PRODUCT", "DISCOUNT"]
 
-const verifyUserFromPar = async (req, res) => {
-    let profile
-    const token = req.headers.authorization
-    if (token) {
-        let user_res
-        const accessToken = token.split(" ")[1]
-        try {
-            const response_user = await axios.get(`${KEY_API}/v1/users/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            user_res = response_user.data.context
-        } catch (error) {
-            user_res = null
-        }
-        profile = user_res
-    }
-    return profile
-}
 
-const getOrgDetail = async (org_id) => {
-    let org
-    try {
-        const response = await axios.get(`${KEY_API}/v1/organizations/${org_id}`)
-        org = response.data.context
-    } catch (error) {
-        org = null
-    }
-    return org
-}
-const getProductable = async (item_id, org_id, type) => {
-    let detail
-    let API_URL = `${KEY_API}/v1/organizations/${org_id}/services/${item_id}`
-    if (type === "PRODUCT") {
-        API_URL = `${KEY_API}/v1/organizations/${org_id}/products/${item_id}`
-    }
-    try {
-        const response = await axios.get(API_URL)
-        detail = response.data.context
-    } catch (error) {
-        detail = null
-    }
-    return detail
-}
+
 
 const historyViewController = {
     //GET:

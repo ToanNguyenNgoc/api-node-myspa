@@ -4,11 +4,9 @@ const {
     getProductable
 } = require('../middleware/historyMiddle')
 const HistoryView = require('../models/historyView.module')
+const _context = require('../context')
 
 const typeArr = ["SERVICE", "PRODUCT", "DISCOUNT"]
-
-
-
 
 const historyViewController = {
     //GET:
@@ -16,8 +14,8 @@ const historyViewController = {
         const profile = await verifyUserFromPar(req)
         if (!profile) return res.status(403).json({ status: false, message: "Unauthenticated" })
         try {
-            const response = await HistoryView.find({ user_id: profile.id }).sort({ createdAt: -1 })
-            res.status(200).json({ status: true, data: response })
+            const context = await _context.paginateHistory(req, HistoryView, { user_id: profile.id }, { createdAt: -1 })
+            res.status(200).json({ status: true, data: { context } })
         } catch (error) {
             res.status(500).json({ status: false, message: "Server error" })
         }
@@ -35,8 +33,8 @@ const historyViewController = {
                 status: false,
                 message: "The selected type is invalid"
             })
-            const old_item = await HistoryView.findOne({ 
-                id: item_id, user_id: user_id, org_id: org_id, type: type 
+            const old_item = await HistoryView.findOne({
+                id: item_id, user_id: user_id, org_id: org_id, type: type
             })
             const org = await getOrgDetail(org_id)
             if (!org) return res.status(401).json({ status: false, message: "Can not find organization" })
@@ -69,6 +67,18 @@ const historyViewController = {
                     res.status(200).json({ status: true, data: response })
                 }
             }
+        } catch (error) {
+            res.status(500).json({ status: false, message: "Server error" })
+        }
+    },
+
+    //DELETE_BY_USER:
+    deleteByUser: async (req, res) => {
+        const profile = await verifyUserFromPar(req, res)
+        if (!profile) return res.status(403).json({ status: false, message: "Unauthenticated" })
+        try {
+            await HistoryView.deleteMany({ user_id: profile.id })
+            res.status(200).json({ status: true, message: "Delete success" })
         } catch (error) {
             res.status(500).json({ status: false, message: "Server error" })
         }

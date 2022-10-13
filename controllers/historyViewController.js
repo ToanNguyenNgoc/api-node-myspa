@@ -82,6 +82,27 @@ const historyViewController = {
         } catch (error) {
             res.status(500).json({ status: false, message: "Server error" })
         }
+    },
+    //GET: View count
+    getViewCount: async (req, res) => {
+        const response = await HistoryView.aggregate([
+            {
+                $group: {
+                    _id: "$name",
+                    id: { $first: "$id" },
+                    productable_id: { $first: "$productable_id" },
+                    price: { $first: "$price" },
+                    special_price: { $first: "$special_price" },
+                    type: { $first: "$type" },
+                    image_url: { $first: "$image_url" },
+                    org_id: { $first: "$org_id" },
+                    org_name: { $first: "$org_name" },
+                    org_full_address: { $first: "$org_full_address" },
+                    view_count: { $sum: 1 }
+                }
+            }, { $sort: { view_count: -1 } }
+        ]).limit(7)
+        res.status(200).json({ status: true, data: response })
     }
 }
 

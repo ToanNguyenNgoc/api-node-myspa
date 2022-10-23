@@ -12,7 +12,10 @@ const bannersRoute = require('./router/bannersRoute');
 const tikitokRoute = require('./router/tiktokRoute');
 const authRoute = require('./router/authRoute');
 const userRoute = require('./router/userRoute');
-const historyViewRoute = require('./router/historyViewRoute')
+const historyViewRoute = require('./router/historyViewRoute');
+const feedbackRoute = require('./router/feedbackRoute');
+const feedbackFeatureRoute = require('./router/feedbackFeatureRoute');
+const feedbackCateRoute = require('./router/feedbackCateRoute')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -40,7 +43,11 @@ app.use('/v1/banners', bannersRoute);
 app.use('/v1/tiktok', tikitokRoute);
 app.use('/v1/auth', authRoute);
 app.use('/v1/users', userRoute);
-app.use('/v1/history', historyViewRoute)
+app.use('/v1/history', historyViewRoute);
+app.use('/v1/feedbacks', feedbackRoute);
+app.use('/v1/feedback_features', feedbackFeatureRoute);
+app.use('/v1/feedback_cates', feedbackCateRoute)
+
 
 
 

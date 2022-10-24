@@ -36,31 +36,32 @@ const feedbackController = {
     },
     //[POST]
     postFeedback: async (req, res) => {
-        const feature_id = req.body.feature
-        const cate_id = req.body.cate
-        if (!cate_id) return res.status(404).json({ status: false, message: "cate is required" })
-        if (!feature_id) return res.status(404).json({ status: false, message: "feature is required" })
-        const feature = await handleFindFeatureById(feature_id, res)
-        const cate = await handleFindCateById(cate_id, res)
-        if (feature && cate) {
-            try {
-                const newFeedBack = new Feedbacks(req.body)
-                const response = await newFeedBack.save()
-                await cate.updateOne({
-                    $push: {
-                        feedbacks: response._id
-                    }
-                })
-                await feature.updateOne({
-                    $push: {
-                        feedbacks: response._id
-                    }
-                })
-                res.status(200).json({ status: true, data: { response } })
-            } catch (error) {
-                res.status(500).json({ status: false, message: "Server error" })
-            }
-        }
+        // const feature_id = req.body.feature
+        // const cate_id = req.body.cate
+        // if (!cate_id) return res.status(404).json({ status: false, message: "cate is required" })
+        // if (!feature_id) return res.status(404).json({ status: false, message: "feature is required" })
+        // const feature = await handleFindFeatureById(feature_id, res)
+        // const cate = await handleFindCateById(cate_id, res)
+        // if (feature && cate) {
+        //     try {
+        //         const newFeedBack = new Feedbacks(req.body)
+        //         const response = await newFeedBack.save()
+        //         await cate.updateOne({
+        //             $push: {
+        //                 feedbacks: response._id
+        //             }
+        //         })
+        //         await feature.updateOne({
+        //             $push: {
+        //                 feedbacks: response._id
+        //             }
+        //         })
+        //         res.status(200).json({ status: true, data: { response } })
+        //     } catch (error) {
+        //         res.status(500).json({ status: false, message: "Server error" })
+        //     }
+        // }
+        res.status(200).json({ status: true, data: req.body })
     }
 }
 

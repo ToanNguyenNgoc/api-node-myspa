@@ -1,3 +1,7 @@
+const axios = require('axios')
+const dotenv = require('dotenv')
+dotenv.config();
+const CHANNEL_FEEDBACK = `${process.env.SLACK_CHANNEL_FEEDBACK}`
 const Feedbacks = require('../models/feedback.module')
 const FeatureFeedback = require('../models/featureFeedback.module')
 const CateFeedBack = require('../models/cateFeedback')
@@ -56,6 +60,44 @@ const feedbackController = {
                         feedbacks: response._id
                     }
                 })
+                axios
+                    .post(CHANNEL_FEEDBACK, {
+                        "blocks": [
+                            {
+                                "type": "divider"
+                            },
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": `*${req.body.fullname}*\n:star::star::star::star:\n\n ${req.body.body}`
+                                },
+                                "accessory": {
+                                    "type": "image",
+                                    "image_url": `${req.body.image_url}`,
+                                    "alt_text": "alt text for image"
+                                }
+                            },
+                            {
+                                "type": "divider"
+                            },
+                            {
+                                "type": "actions",
+                                "elements": [
+                                    {
+                                        "type": "button",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": `${req.body.platform}`,
+                                            "emoji": true
+                                        },
+                                        "value": "click_me_123",
+                                        "style": "primary"
+                                    },
+                                ]
+                            }
+                        ]
+                    })
                 res.status(200).json({ status: true, data: { response } })
             } catch (error) {
                 res.status(500).json({ status: false, message: "Server error" })

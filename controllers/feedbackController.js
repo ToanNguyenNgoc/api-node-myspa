@@ -11,6 +11,7 @@ const handleFindFeatureById = async (id, res) => {
     let feature
     try {
         feature = await FeatureFeedback.findById(id)
+        if (!feature) return res.status(404).json({ status: false, message: `cannot find feature_id ${id}` })
     } catch (error) {
         res.status(404).json({ status: false, message: `cannot find feature_id ${id}` })
     }
@@ -20,6 +21,7 @@ const handleFindCateById = async (id, res) => {
     let cate
     try {
         cate = await CateFeedBack.findById(id)
+        if (!cate) return res.status(404).json({ status: false, message: `cannot find cate_id ${id}` })
     } catch (error) {
         res.status(404).json({ status: false, message: `cannot find cate_id ${id}` })
     }
@@ -60,7 +62,6 @@ const feedbackController = {
                         feedbacks: response._id
                     }
                 })
-                res.status(200).json({ status: true, data: { response } })
                 axios
                     .post(CHANNEL_FEEDBACK, {
                         "blocks": [
@@ -99,6 +100,7 @@ const feedbackController = {
                             }
                         ]
                     })
+                res.status(200).json({ status: true, data: { response } })
             } catch (error) {
                 res.status(500).json({ status: false, message: "Server error" })
             }

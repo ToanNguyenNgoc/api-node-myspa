@@ -1,7 +1,7 @@
 const axios = require('axios')
 const dotenv = require('dotenv')
 dotenv.config();
-const CHANNEL_FEEDBACK = `${process.env.SLACK_CHANNEL_FEEDBACK}`
+const CHANNEL_FEEDBACK = `https://hooks.slack.com/services/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`
 const Feedbacks = require('../models/feedback.module')
 const FeatureFeedback = require('../models/featureFeedback.module')
 const CateFeedBack = require('../models/cateFeedback')

@@ -1,7 +1,3 @@
-// const axios = require('axios')
-const dotenv = require('dotenv')
-// dotenv.config();
-// const CHANNEL_FEEDBACK = `https://hooks.slack.com/services/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`
 const Feedbacks = require('../models/feedback.module')
 const FeatureFeedback = require('../models/featureFeedback.module')
 const CateFeedBack = require('../models/cateFeedback')
@@ -61,44 +57,6 @@ const feedbackController = {
                     }
                 })
                 res.status(200).json({ status: true, data: { response } })
-                // axios
-                //     .post(CHANNEL_FEEDBACK, {
-                //         "blocks": [
-                //             {
-                //                 "type": "divider"
-                //             },
-                //             {
-                //                 "type": "section",
-                //                 "text": {
-                //                     "type": "mrkdwn",
-                //                     "text": `*${req.body.fullname}*\n:star::star::star::star:\n\n ${req.body.body}`
-                //                 },
-                //                 "accessory": {
-                //                     "type": "image",
-                //                     "image_url": `${req.body.image_url}`,
-                //                     "alt_text": "alt text for image"
-                //                 }
-                //             },
-                //             {
-                //                 "type": "divider"
-                //             },
-                //             {
-                //                 "type": "actions",
-                //                 "elements": [
-                //                     {
-                //                         "type": "button",
-                //                         "text": {
-                //                             "type": "plain_text",
-                //                             "text": `${req.body.platform}`,
-                //                             "emoji": true
-                //                         },
-                //                         "value": "click_me_123",
-                //                         "style": "primary"
-                //                     },
-                //                 ]
-                //             }
-                //         ]
-                //     })
             } catch (error) {
                 res.status(500).json({ status: false, message: "Server error" })
             }

@@ -1,8 +1,9 @@
 const Promise = require('bluebird')
 const Trend = require('../models/trend.module')
 const TrendService = require('../models/trendService.module')
-const { getOrgDetail, getProductable, verifyUserFromPar } = require('../middleware/historyMiddle')
+const { getOrgDetail, getProductable } = require('../middleware/historyMiddle')
 const _context = require('../context')
+const verifyToken = require('../utils/verifyToken')
 
 
 const trendController = {
@@ -33,8 +34,9 @@ const trendController = {
     },
     //[POST]
     post: async (req, res) => {
-        const profile = await verifyUserFromPar(req, res)
-        if (!profile) return res.status(403).json({ status: false, message: "Unauthenticated" })
+
+        const { user_access } = await verifyToken(req, res)
+        if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [POST]" })
         const org = await getOrgDetail(req.body.organization_id)
         if (!org) return res.status(404).json({ status: false, message: 'Cannot find organization' })
         if (!req.body.services) return res.status(403).json({ status: false, message: 'Services is required' })

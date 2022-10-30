@@ -37,7 +37,8 @@ const getOrgDetail = async (org_id) => {
 //
 const getProductable = async (item_id, org_id, type) => {
     let detail
-    let API_URL = `${KEY_API}/v1/organizations/${org_id}/services/${item_id}`
+    let API_URL = ``
+    if (type === "SERVICE") API_URL = `${KEY_API}/v1/organizations/${org_id}/services/${item_id}`
     if (type === "PRODUCT") API_URL = `${KEY_API}/v1/organizations/${org_id}/products/${item_id}`
     if (type === "DISCOUNT") API_URL = `${KEY_API}/v1/discounts/${item_id}`
     try {

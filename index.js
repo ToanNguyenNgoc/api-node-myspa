@@ -16,6 +16,8 @@ const historyViewRoute = require('./router/historyViewRoute');
 const feedbackRoute = require('./router/feedbackRoute');
 const feedbackFeatureRoute = require('./router/feedbackFeatureRoute');
 const feedbackCateRoute = require('./router/feedbackCateRoute')
+const trendCateRoute = require('./router/trendCateRoute');
+const trendRoute = require('./router/trendRoute')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -46,7 +48,9 @@ app.use('/v1/users', userRoute);
 app.use('/v1/history', historyViewRoute);
 app.use('/v1/feedbacks', feedbackRoute);
 app.use('/v1/feedback_features', feedbackFeatureRoute);
-app.use('/v1/feedback_cates', feedbackCateRoute)
+app.use('/v1/feedback_cates', feedbackCateRoute),
+app.use('/v1/trend_cates', trendCateRoute)
+app.use('/v1/trends', trendRoute)
 
 
 

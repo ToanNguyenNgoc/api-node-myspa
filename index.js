@@ -17,7 +17,8 @@ const feedbackRoute = require('./router/feedbackRoute');
 const feedbackFeatureRoute = require('./router/feedbackFeatureRoute');
 const feedbackCateRoute = require('./router/feedbackCateRoute')
 const trendCateRoute = require('./router/trendCateRoute');
-const trendRoute = require('./router/trendRoute')
+const trendRoute = require('./router/trendRoute');
+const organizationRoute = require('./router/organizationsRoute')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -51,6 +52,7 @@ app.use('/v1/feedback_features', feedbackFeatureRoute);
 app.use('/v1/feedback_cates', feedbackCateRoute),
 app.use('/v1/trend_cates', trendCateRoute)
 app.use('/v1/trends', trendRoute)
+app.use('/v1/organizations', organizationRoute)
 
 
 

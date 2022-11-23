@@ -9,10 +9,11 @@ const verifyToken = require('../utils/verifyToken')
 const trendController = {
     //[GET]
     getAll: async (req, res) => {
+        const filter = req.query.filter ?? {}
         try {
             let include = []
             if (req.query.include) include = req.query.include.split('|')
-            const context = await _context.paginateHistory(req, Trend, {}, { createdAt: -1 }, include)
+            const context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, include)
             res.status(200).json({ status: true, data: { context } })
         } catch (error) {
             res.status(500).json({ status: false, message: 'Server error' })

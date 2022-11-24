@@ -51,7 +51,7 @@ app.use('/v1/history', historyViewRoute);
 app.use('/v1/feedbacks', feedbackRoute);
 app.use('/v1/feedback_features', feedbackFeatureRoute);
 app.use('/v1/feedback_cates', feedbackCateRoute),
-    app.use('/v1/trend_cates', trendCateRoute)
+app.use('/v1/trend_cates', trendCateRoute)
 app.use('/v1/trends', trendRoute)
 app.use('/v1/organizations', organizationRoute)
 app.use('/v1/trends_services', trendServiceRoute)

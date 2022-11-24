@@ -1,6 +1,7 @@
 const route = require("express").Router();
 const tiktokController = require("../controllers/tiktokController")
 
-route.get("/trending", tiktokController.getTrendVideos);
+route.get("/getVideoByUrl", tiktokController.getVideoByUrl);
+route.get('/getCommentsByUrl', tiktokController.getCommentsByUrl)
 
 module.exports = route

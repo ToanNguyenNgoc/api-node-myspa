@@ -32,6 +32,7 @@ const tiktokController = {
             cursor: req.query.cursor ?? 1,
             count: req.query.count ?? 15
         }
+        
         let paramsURL = `?${new URLSearchParams(params).toString()}`
         try {
             const response = await axios.get(`${ORIGIN}/getCommentsByUrl${paramsURL}`)

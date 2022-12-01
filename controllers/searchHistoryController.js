@@ -62,7 +62,7 @@ const searchHistoryController = {
                 const newBody = {
                     ...body,
                     text: detail.service_name ?? detail.product_name,
-                    image_url: detail.image_url,
+                    image_url: detail.image ? detail.image_url : org?.image_url,
                     organization_id: organization_id,
                     productable_id: productable_id
                 }

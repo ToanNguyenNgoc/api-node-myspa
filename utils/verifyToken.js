@@ -4,6 +4,7 @@ const verifyToken = async (req, res) => {
     let error = false
     let user_access
     const token = req.headers.authorization
+    console.log(token)
     if (!token) error = true
     if (token) {
         let user_token

@@ -9,7 +9,7 @@ const KEY = process.env.LICENSE_KEY
 const tiktokController = {
     getVideoByUrl: async (req, res) => {
         const { video_url } = req.query
-        if (!video_url) return res.status(403).json({ status: false, message: 'video_url is required!' })
+        if (!video_url) return res.status(403).json({ status: false, message: 'video_url is required' })
         const params = {
             license_key: KEY,
             video_url: video_url
@@ -25,7 +25,7 @@ const tiktokController = {
     },
     getCommentsByUrl: async (req, res) => {
         const { video_url } = req.query
-        if (!video_url) return res.status(403).json({ status: false, message: 'video_url is required!' })
+        if (!video_url) return res.status(403).json({ status: false, message: 'video_url is required' })
         const params = {
             license_key: KEY,
             video_url: video_url,

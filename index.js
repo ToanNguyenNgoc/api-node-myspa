@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+// const multer = require('multer')
+// const upload = multer({ dest: 'uploads/' })
 
 const bannersTypeRoute = require('./router/bannersTypeRoute');
 const bannersRoute = require('./router/bannersRoute');
@@ -19,7 +21,9 @@ const feedbackCateRoute = require('./router/feedbackCateRoute')
 const trendCateRoute = require('./router/trendCateRoute');
 const trendRoute = require('./router/trendRoute');
 const organizationRoute = require('./router/organizationsRoute');
-const trendServiceRoute = require('./router/trendServiceRoute')
+const trendServiceRoute = require('./router/trendServiceRoute');
+const mediaRoute = require('./router/mediaRoute')
+const searchHistoryRoute = require('./router/searchHistoryRoute')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -55,6 +59,16 @@ app.use('/v1/trend_cates', trendCateRoute)
 app.use('/v1/trends', trendRoute)
 app.use('/v1/organizations', organizationRoute)
 app.use('/v1/trends_services', trendServiceRoute)
+app.use('/v1/media', mediaRoute),
+app.use('/v1/search_history', searchHistoryRoute)
+
+//media
+// app.post('/upload', upload.single('avatar'), function (req, res, next) {
+//     // req.file is the `avatar` file
+//     // req.body will hold the text fields, if there were any
+//     console.log(req.file)
+//     res.status(200).json({data:''})
+// })
 
 
 

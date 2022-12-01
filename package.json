@@ -28,7 +28,9 @@
     "mongoose": "^6.6.3",
     "mongoose-paginate-v2": "^1.7.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.20",
-    "tiktok-app-api": "^1.4.1"
+    "tiktok-app-api": "^1.4.1",
+    "util": "^0.12.5"
   }
 }

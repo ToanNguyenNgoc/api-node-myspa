@@ -26,6 +26,7 @@ const verifyUserFromPar = async (req, res) => {
 //
 const getOrgDetail = async (org_id) => {
     let org
+    if(!org_id) org = null
     try {
         const response = await axios.get(`${KEY_API}/v1/organizations/${org_id}`)
         org = response.data.context
@@ -37,6 +38,7 @@ const getOrgDetail = async (org_id) => {
 //
 const getProductable = async (item_id, org_id, type) => {
     let detail
+    if(!org_id || !item_id) detail = null
     let API_URL = ``
     if (type === "SERVICE") API_URL = `${KEY_API}/v1/organizations/${org_id}/services/${item_id}`
     if (type === "PRODUCT") API_URL = `${KEY_API}/v1/organizations/${org_id}/products/${item_id}`

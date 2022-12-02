@@ -13,7 +13,11 @@ const searchHistorySchema = mongoose.Schema({
     user_name: { type: String },
     image_url: { type: String },
     organization_id: { type: String },
-    productable_id: { type: String }
+    productable_id: { type: String },
+    status: {
+        type: Number,
+        default: 1
+    }
 
 }, { timestamps: true })
 

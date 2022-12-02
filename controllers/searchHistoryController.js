@@ -79,7 +79,8 @@ const searchHistoryController = {
         const { user_id } = req.params
         const filter = {
             user_id: user_id,
-            type: req.query.filter?.type
+            type: req.query.filter?.type,
+            status: 1
         }
         if (!user_id) return res.status(401).json({ status: false, message: "user_id is required!" })
         try {
@@ -105,8 +106,23 @@ const searchHistoryController = {
             return res.status(403).json({ status: false, message: "Unauthenticated" })
         }
         try {
-            await SearchHistory.findByIdAndDelete(req.params._id)
+            const response = await SearchHistory.findById(req.params._id)
+            await response.updateOne({ $set: { status: 0 } })
+            // res.status(200).json({ status: true, message: response })
             res.status(200).json({ status: true, message: `Delete ${req.params._id} success!` })
+        } catch (error) {
+            res.status(500).json({ status: false, message: "Server error" })
+        }
+    },
+    //[DELETE ALL BY USER_ID]
+    deleteAllByUserId: async (req, res) => {
+        const profile = await verifyUserFromPar(req, res)
+        if (!profile) {
+            return res.status(403).json({ status: false, message: "Unauthenticated" })
+        }
+        try {
+            await SearchHistory.updateMany({ user_id: profile.id, status: 1 }, { $set: { status: 0 } })
+            res.status(200).json({ status: true, message: `Delete all success!` })
         } catch (error) {
             res.status(500).json({ status: false, message: "Server error" })
         }

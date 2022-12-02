@@ -21,6 +21,7 @@ const userController = {
                 const user_response = await User.findById(user_access.id)
                 const { password, ...other } = user_response._doc
                 res.status(200).json({ status: true, data: { ...other } })
+                // res.status(200).json({ status: true, data: { user_response } })
             }
         } catch (error) {
             res.status(500).json(error)

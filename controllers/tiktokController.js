@@ -21,9 +21,9 @@ const tiktokController = {
         }
         let paramsURL = `?${new URLSearchParams(params).toString()}`
         try {
-            // const response = await axios.get(`${ORIGIN}/getVideoByUrl${paramsURL}`)
-            // const data = await response.data
-            res.status(200).json({ data: [] })
+            const response = await axios.get(`${ORIGIN}/getVideoByUrl${paramsURL}`)
+            const data = await response.data
+            res.status(200).json({ data: data })
         } catch (error) {
             res.status(500).json({ status: false, message: error })
         }
@@ -40,34 +40,36 @@ const tiktokController = {
 
         let paramsURL = `?${new URLSearchParams(params).toString()}`
         try {
-            const response = await axios.get(`${ORIGIN}/getCommentsByUrl${paramsURL}`)
-            const resData = await response.data?.tiktok?.comments
-            const requests_count = await response.data?.limits_info?.requests_count
-            const data = resData?.map(i => {
-                const reply_comment = i.reply_comment && i.reply_comment[0]
-                return {
-                    commentable_id: `TIK${i.cid}`,
-                    commentable_type: 'TIKTOK',
-                    created_at: i.create_time,
-                    body: reply_comment ? reply_comment?.text : i.text,
-                    user: {
-                        avatar: reply_comment ?
-                            reply_comment?.user?.avatar_300x300?.url_list[0] :
-                            i.user?.avatar_300x300?.url_list[0],
-                        fullname: reply_comment ? reply_comment.user?.nickname : i.user?.nickname,
-                    },
-                    children: reply_comment ? [{
-                        commentable_id: `TIK${reply_comment.cid}`,
-                        commentable_type: `TIKTOK`,
-                        created_at: i.create_time,
-                        body: i.text,
-                        user: {
-                            avatar: i.user?.avatar_300x300?.url_list[0],
-                            fullname: i.user?.nickname,
-                        }
-                    }] : []
-                }
-            })
+            // const response = await axios.get(`${ORIGIN}/getCommentsByUrl${paramsURL}`)
+            // const resData = await response.data?.tiktok?.comments
+            // const requests_count = await response.data?.limits_info?.requests_count
+            // const data = resData?.map(i => {
+            //     const reply_comment = i.reply_comment && i.reply_comment[0]
+            //     return {
+            //         commentable_id: `TIK${i.cid}`,
+            //         commentable_type: 'TIKTOK',
+            //         created_at: i.create_time,
+            //         body: reply_comment ? reply_comment?.text : i.text,
+            //         user: {
+            //             avatar: reply_comment ?
+            //                 reply_comment?.user?.avatar_300x300?.url_list[0] :
+            //                 i.user?.avatar_300x300?.url_list[0],
+            //             fullname: reply_comment ? reply_comment.user?.nickname : i.user?.nickname,
+            //         },
+            //         children: reply_comment ? [{
+            //             commentable_id: `TIK${reply_comment.cid}`,
+            //             commentable_type: `TIKTOK`,
+            //             created_at: i.create_time,
+            //             body: i.text,
+            //             user: {
+            //                 avatar: i.user?.avatar_300x300?.url_list[0],
+            //                 fullname: i.user?.nickname,
+            //             }
+            //         }] : []
+            //     }
+            // })
+            const data = []
+            const requests_count = -1
             res.status(200).json({ status: true, data: { context: { data, requests_count } } })
         } catch (error) {
             res.status(500).json({ status: false, message: error })

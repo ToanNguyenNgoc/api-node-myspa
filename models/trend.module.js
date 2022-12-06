@@ -25,6 +25,10 @@ const trendSchema = mongoose.Schema({
     title: {
         type: String
     },
+    tiktok: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tiktok'
+    },
     content: {
         type: String,
     },
@@ -34,8 +38,8 @@ const trendSchema = mongoose.Schema({
     media_url: {
         type: String
     },
-    trend_url:{
-        type:String
+    trend_url: {
+        type: String
     }
 }, { timestamps: true })
 

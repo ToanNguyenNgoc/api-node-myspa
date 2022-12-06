@@ -5,6 +5,10 @@ const { getOrgDetail, getProductable } = require('../middleware/historyMiddle')
 const _context = require('../context')
 const verifyToken = require('../utils/verifyToken')
 
+const { getTiktokDetail } = require('../middleware/getTiktok')
+const Tiktok = require('../models/tiktok.module')
+const { pickBy, identity } = require('lodash')
+
 
 const trendController = {
     //[GET]
@@ -39,6 +43,7 @@ const trendController = {
         const { user_access } = await verifyToken(req, res)
         if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [POST]" })
         const org = await getOrgDetail(req.body.organization_id)
+        if (!req.body.trend_url) return res.status(403).json({ status: false, message: 'trends_url is required' })
         if (!org) return res.status(404).json({ status: false, message: 'Cannot find organization' })
         if (!req.body.services) return res.status(403).json({ status: false, message: 'Services is required' })
 
@@ -51,10 +56,14 @@ const trendController = {
             cate_id: req.body.cate_id,
             image_thumb: req.body.image_thumb,
             media_url: req.body.media_url,
-            trend_url: req.body.trend_url
+            trend_url: req.body.trend_url,
         })
         const response = await newTrend.save()
         const trend_id = await response._id
+        //handle up to tiktok model
+        const tiktok_detail = await getTiktokDetail(trend_id, req.body.trend_url)
+        if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
+        //
         const services_id = req.body.services
         const services = await Promise.map(services_id, async (id) => {
             const detail = await getProductable(id, org.id, "SERVICE")
@@ -76,11 +85,38 @@ const trendController = {
             await response.updateOne({
                 $push: {
                     services: resDetail
+                },
+                $set: {
+                    tiktok: tiktok_detail._id
                 }
             })
         })
         //update trend
         res.status(200).json({ status: true, data: response })
+        // res.status(200).json(tiktok_detail)
+    },
+    //[UPDATE]
+    update: async (req, res) => {
+        const { id } = req.params
+        const { user_access } = await verifyToken(req, res)
+        if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [POST]" })
+        const trend = await Trend.findById(id)
+        const curTiktok = await Tiktok.findById(trend.tiktok)
+        let t
+        if (!curTiktok) {
+            const tiktok_detail = await getTiktokDetail(id, trend.trend_url)
+            t = tiktok_detail
+            if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
+        }
+        const updateDate = pickBy({
+            title: req.body.title,
+            content: req.body.content,
+            tiktok: t?._id
+        }, identity)
+        await trend.updateOne({
+            $set: updateDate
+        })
+        res.status(200).json({ status: true, data: trend })
     }
 }
 

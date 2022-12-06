@@ -1,10 +1,15 @@
 const axios = require('axios')
 const dotenv = require('dotenv')
-
+const tiktok = require('tiktok-app-api');
 dotenv.config();
 const ORIGIN = process.env.TIKTOK_ORIGIN
 const KEY = process.env.LICENSE_KEY
 
+let tiktokApp;
+
+(async () => {
+    tiktokApp = await tiktok();
+})();
 
 const tiktokController = {
     getVideoByUrl: async (req, res) => {
@@ -68,6 +73,10 @@ const tiktokController = {
             res.status(500).json({ status: false, message: error })
         }
     },
+    test: async (req, res) => {
+        const iterator = tiktokApp.getTrendingVideos();
+        res.status(200).json({ status: false, message: iterator })
+    }
 }
 
 module.exports = tiktokController

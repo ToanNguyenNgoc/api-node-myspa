@@ -21,9 +21,9 @@ const tiktokController = {
         }
         let paramsURL = `?${new URLSearchParams(params).toString()}`
         try {
-            const response = await axios.get(`${ORIGIN}/getVideoByUrl${paramsURL}`)
-            const data = await response.data
-            res.status(200).json({ data: data })
+            // const response = await axios.get(`${ORIGIN}/getVideoByUrl${paramsURL}`)
+            // const data = await response.data
+            res.status(200).json({ data: [] })
         } catch (error) {
             res.status(500).json({ status: false, message: error })
         }

@@ -93,7 +93,6 @@ const trendController = {
         })
         //update trend
         res.status(200).json({ status: true, data: response })
-        // res.status(200).json(tiktok_detail)
     },
     //[UPDATE]
     update: async (req, res) => {

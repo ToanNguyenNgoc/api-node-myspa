@@ -7,7 +7,7 @@ const KEY = process.env.LICENSE_KEY
 const _context = require('../context')
 const Trend = require('../models/trend.module')
 const Comment = require('../models/comment.module')
-const verifyToken = require('../utils/verifyToken')
+// const verifyToken = require('../utils/verifyToken')
 
 let tiktokApp;
 
@@ -28,8 +28,8 @@ const tiktokController = {
     },
     refreshComment: async (req, res) => {
         const { id } = req.params
-        const { user_access } = await verifyToken(req, res)
-        if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [GET]" })
+        // const { user_access } = await verifyToken(req, res)
+        // if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [GET]" })
         try {
             const trend = await Trend.findById(id)
             const trend_url = await trend.trend_url

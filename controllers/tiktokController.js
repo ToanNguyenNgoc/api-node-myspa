@@ -86,7 +86,6 @@ const tiktokController = {
         }
     },
     delete: async (req, res) => {
-        const responseInsert = await Comment.deleteMany({})
         res.status(200).json({ status: true, data: 'delete' })
     }
 }

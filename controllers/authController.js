@@ -33,7 +33,7 @@ const authController = {
                     admin: user.admin
                 }, "TOKEN_KEY", { expiresIn: "10d" })
                 const { password, ...res_user } = user._doc
-                res.status(200).json({ status: true, data: { ...res_user, token: token } })
+                res.status(200).json({ status: true, context: { ...res_user, token: token } })
             }
         } catch (error) {
             res.status(500).json(err)

@@ -126,6 +126,17 @@ const searchHistoryController = {
         } catch (error) {
             res.status(500).json({ status: false, message: "Server error" })
         }
+    },
+    getAll: async (req, res) => {
+        const response = await SearchHistory.aggregate([
+            {
+                $group:{
+                    _id:'$text',
+                    view_count: { $sum: 1 }
+                }
+            },{ $sort: { view_count: -1 } }
+        ])
+        res.status(200).json({ status: true, data: { response } })
     }
 }
 

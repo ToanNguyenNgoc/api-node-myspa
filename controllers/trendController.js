@@ -110,7 +110,8 @@ const trendController = {
         const updateDate = pickBy({
             title: req.body.title,
             content: req.body.content,
-            tiktok: t?._id
+            tiktok: t?._id,
+            media_url:req.body.media_url
         }, identity)
         await trend.updateOne({
             $set: updateDate

@@ -91,7 +91,7 @@ const trendController = {
                 }
             })
         })
-        //update trend
+        //update trend after
         res.status(200).json({ status: true, data: response })
     },
     //[UPDATE]

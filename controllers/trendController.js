@@ -37,6 +37,11 @@ const trendController = {
                         as: 'tiktok'
                     }
                 },
+                {
+                    $set: {
+                        'tiktok': { $first: '$tiktok' }
+                    }
+                },
                 { $sample: { size: 10 } },
                 { $skip: (page * limit) - limit },
                 { $limit: limit }

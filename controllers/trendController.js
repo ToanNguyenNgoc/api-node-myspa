@@ -14,10 +14,41 @@ const trendController = {
     //[GET]
     getAll: async (req, res) => {
         const filter = req.query.filter ?? {}
+        const page = req.query.page ? parseInt(req.query.page) : 1
+        const limit = req.query.limit ? parseInt(req.query.limit) : 20
         try {
             let include = []
             if (req.query.include) include = req.query.include.split('|')
-            const context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, include)
+            const trends = await Trend.aggregate([
+                { $match: filter },
+                {
+                    $lookup: {
+                        from: 'trendservices',
+                        foreignField: '_id',
+                        localField: 'services',
+                        as: 'services'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'tiktoks',
+                        foreignField: '_id',
+                        localField: 'tiktok',
+                        as: 'tiktok'
+                    }
+                },
+                { $sample: { size: 10 } },
+                { $skip: (page * limit) - limit },
+                { $limit: limit }
+            ])
+            const count = await Trend.find(filter).count()
+            const context = {
+                data: trends,
+                current_page: page,
+                per_page: limit,
+                total: count,
+                total_page: Math.ceil(count / limit)
+            }
             res.status(200).json({ status: true, data: { context } })
         } catch (error) {
             res.status(500).json({ status: false, message: 'Server error' })
@@ -111,7 +142,7 @@ const trendController = {
             title: req.body.title,
             content: req.body.content,
             tiktok: t?._id,
-            media_url:req.body.media_url
+            media_url: req.body.media_url
         }, identity)
         await trend.updateOne({
             $set: updateDate

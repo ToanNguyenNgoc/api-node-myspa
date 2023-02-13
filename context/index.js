@@ -7,7 +7,8 @@ const context = {
             .find({ ...filter })
             .sort({ ...sort })
             .populate(populate)
-            .skip((page * limit) - limit).limit(limit)
+            .skip((page * limit) - limit)
+            .limit(limit)
         const count = await collection.find({ ...filter }).sort({ ...sort }).count()
         const context = {
             data: data,

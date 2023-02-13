@@ -19,6 +19,7 @@ const trendController = {
         try {
             let include = []
             if (req.query.include) include = req.query.include.split('|')
+            const count = await Trend.find(filter).count()
             const trends = await Trend.aggregate([
                 { $match: filter },
                 {
@@ -42,11 +43,10 @@ const trendController = {
                         'tiktok': { $first: '$tiktok' }
                     }
                 },
-                { $sample: { size: 10 } },
+                { $sample: { size: count } },
                 { $skip: (page * limit) - limit },
                 { $limit: limit }
             ])
-            const count = await Trend.find(filter).count()
             const context = {
                 data: trends,
                 current_page: page,

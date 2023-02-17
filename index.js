@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swaggerDocument')
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 
@@ -44,6 +46,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 // }));
 app.use(cors())
 app.use(morgan('common'));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // ROUTER
 app.use('/v1/banners_type', bannersTypeRoute);
@@ -61,21 +64,6 @@ app.use('/v1/organizations', organizationRoute)
 app.use('/v1/trends_services', trendServiceRoute)
 app.use('/v1/media', mediaRoute),
 app.use('/v1/search_history', searchHistoryRoute)
-
-//media
-// app.post('/upload', upload.single('avatar'), function (req, res, next) {
-//     // req.file is the `avatar` file
-//     // req.body will hold the text fields, if there were any
-//     console.log(req.file)
-//     res.status(200).json({data:''})
-// })
-
-
-
-
-// app.get('/api', (req, res) => {
-//     res.send('Hello World!')
-// })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

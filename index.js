@@ -44,9 +44,12 @@ app.use(bodyParser.json({ limit: '50mb' }));
 //     ],
 //     optionsSuccessStatus: 200,
 // }));
+var options = {
+    customCss: '.swagger-ui .topbar { display: none }'
+  };
 app.use(cors())
 app.use(morgan('common'));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument,options))
 
 // ROUTER
 app.use('/v1/banners_type', bannersTypeRoute);

@@ -7,7 +7,8 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swaggerDocument')
+const swaggerDocument = require('./swaggerDocument');
+const style = require('./style')
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 
@@ -45,11 +46,11 @@ app.use(bodyParser.json({ limit: '50mb' }));
 //     optionsSuccessStatus: 200,
 // }));
 var options = {
-    customCss: '.swagger-ui .topbar { display: none }'
-  };
+    customCss: `.swagger-ui ${style}`
+};
 app.use(cors())
 app.use(morgan('common'));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument,options))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
 
 // ROUTER
 app.use('/v1/banners_type', bannersTypeRoute);
@@ -61,12 +62,12 @@ app.use('/v1/history', historyViewRoute);
 app.use('/v1/feedbacks', feedbackRoute);
 app.use('/v1/feedback_features', feedbackFeatureRoute);
 app.use('/v1/feedback_cates', feedbackCateRoute),
-app.use('/v1/trend_cates', trendCateRoute)
+    app.use('/v1/trend_cates', trendCateRoute)
 app.use('/v1/trends', trendRoute)
 app.use('/v1/organizations', organizationRoute)
 app.use('/v1/trends_services', trendServiceRoute)
 app.use('/v1/media', mediaRoute),
-app.use('/v1/search_history', searchHistoryRoute)
+    app.use('/v1/search_history', searchHistoryRoute)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

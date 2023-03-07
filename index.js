@@ -46,7 +46,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 //     optionsSuccessStatus: 200,
 // }));
 var options = {
-    customCss: `.swagger-ui ${style}`
+    // customCss: `.swagger-ui ${style} .download-url-wrapper {display:none !important}`
 };
 app.use(cors())
 app.use(morgan('common'));
@@ -61,13 +61,13 @@ app.use('/v1/users', userRoute);
 app.use('/v1/history', historyViewRoute);
 app.use('/v1/feedbacks', feedbackRoute);
 app.use('/v1/feedback_features', feedbackFeatureRoute);
-app.use('/v1/feedback_cates', feedbackCateRoute),
-    app.use('/v1/trend_cates', trendCateRoute)
-app.use('/v1/trends', trendRoute)
-app.use('/v1/organizations', organizationRoute)
-app.use('/v1/trends_services', trendServiceRoute)
-app.use('/v1/media', mediaRoute),
-    app.use('/v1/search_history', searchHistoryRoute)
+app.use('/v1/feedback_cates', feedbackCateRoute);
+app.use('/v1/trend_cates', trendCateRoute);
+app.use('/v1/trends', trendRoute);
+app.use('/v1/organizations', organizationRoute);
+app.use('/v1/trends_services', trendServiceRoute);
+app.use('/v1/media', mediaRoute);
+app.use('/v1/search_history', searchHistoryRoute)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

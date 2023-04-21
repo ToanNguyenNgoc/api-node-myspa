@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-const port = 3001;
+const port = 3003;
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -26,7 +26,9 @@ const trendRoute = require('./router/trendRoute');
 const organizationRoute = require('./router/organizationsRoute');
 const trendServiceRoute = require('./router/trendServiceRoute');
 const mediaRoute = require('./router/mediaRoute')
-const searchHistoryRoute = require('./router/searchHistoryRoute')
+const searchHistoryRoute = require('./router/searchHistoryRoute');
+const lolRoute = require("./router/lolRoute");
+const htmlMetadataRoute = require("./router/htmlMetadataRoute");
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -67,7 +69,9 @@ app.use('/v1/trends', trendRoute);
 app.use('/v1/organizations', organizationRoute);
 app.use('/v1/trends_services', trendServiceRoute);
 app.use('/v1/media', mediaRoute);
-app.use('/v1/search_history', searchHistoryRoute)
+app.use('/v1/search_history', searchHistoryRoute);
+app.use('/v1/lols', lolRoute);
+app.use('/v1/html_metadata', htmlMetadataRoute);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

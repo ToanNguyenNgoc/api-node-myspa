@@ -15,8 +15,8 @@ const trendController = {
     getAll: async (req, res) => {
         const filter = req.query.filter ?? {}
         const page = req.query.page ? parseInt(req.query.page) : 1
-        // const limit = req.query.limit ? parseInt(req.query.limit) : 20
-        const limit = 30
+        const limit = req.query.limit ? parseInt(req.query.limit) : 20
+        // const limit = 30
         try {
             let include = []
             if (req.query.include) include = req.query.include.split('|')

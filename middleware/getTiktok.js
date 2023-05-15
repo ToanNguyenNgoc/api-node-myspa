@@ -32,8 +32,6 @@ const getTiktokDetail = async (trend_id, trend_url) => {
         const resCol = await colNew.save()
         data = resCol
     } catch (error) {
-
-        
         data = null
     }
     return data

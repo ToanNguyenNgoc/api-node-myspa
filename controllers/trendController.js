@@ -99,7 +99,7 @@ const trendController = {
         const trend_id = await response._id
         //handle up to tiktok model
         const tiktok_detail = await getTiktokDetail(trend_id, req.body.trend_url)
-        if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
+        // if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
         //
         const services_id = req.body.services
         const services = await Promise.map(services_id, async (id) => {
@@ -124,7 +124,7 @@ const trendController = {
                     services: resDetail
                 },
                 $set: {
-                    tiktok: tiktok_detail._id
+                    tiktok: tiktok_detail?._id
                 }
             })
         })

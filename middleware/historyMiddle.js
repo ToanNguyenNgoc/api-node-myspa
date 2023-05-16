@@ -10,7 +10,7 @@ const verifyUserFromPar = async (req, res) => {
     if (token) {
         let user_res
         try {
-            const response_user = await axios.get(`${KEY_API}/v1/users/profile`, {
+            const response_user = await axios.get(`https://api.myspa.vn/v1/users/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token.trim()}`
                 }

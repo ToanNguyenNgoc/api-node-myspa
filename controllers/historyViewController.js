@@ -1,3 +1,4 @@
+const axios = require('axios')
 const {
     verifyUserFromPar,
     getOrgDetail,
@@ -11,14 +12,31 @@ const typeArr = ["SERVICE", "PRODUCT", "DISCOUNT"]
 const historyViewController = {
     //GET:
     getHistoryView: async (req, res) => {
-        const profile = await verifyUserFromPar(req)
-        if (!profile) return res.status(403).json({ status: false, message: "Unauthenticated" })
+        const token = req.headers.authorization?.replace('Bearer','') ?? ''
+    if (token) {
+        let user_res
         try {
-            const context = await _context.paginateHistory(req, HistoryView, { user_id: profile.id }, { createdAt: -1 })
-            res.status(200).json({ status: true, data: { context } })
+            const response_user = await axios.get(`https://api.myspa.vn/v1/users/profile`, {
+                headers: {
+                    'Authorization': `Bearer ${token.trim()}`
+                }
+            })
+            // user_res = response_user.data.context
+            res.status(200).json({data:response_user.data})
         } catch (error) {
-            res.status(500).json({ status: false, message: "Server error" })
+            // user_res = null
+            res.status(200).json({data:`${error}`})
         }
+        // profile = user_res
+    }
+        // const profile = await verifyUserFromPar(req)
+        // if (!profile) return res.status(403).json({ status: false, message: "Unauthenticated" })
+        // try {
+        //     const context = await _context.paginateHistory(req, HistoryView, { user_id: profile.id }, { createdAt: -1 })
+        //     res.status(200).json({ status: true, data: { context } })
+        // } catch (error) {
+        //     res.status(500).json({ status: false, message: "Server error" })
+        // }
     },
     //POST:
     postHistoryView: async (req, res) => {

@@ -6,27 +6,23 @@ const KEY_API = process.env.PAR_API_URL
 
 const verifyUserFromPar = async (req, res) => {
     let profile
-    const token = req.headers.authorization?.replace('Bearer','') ?? ''
-    if (token) {
-        let user_res
-        try {
-            const response_user = await axios.get(`https://api.myspa.vn/v1/users/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${token.trim()}`
-                }
-            })
-            user_res = response_user.data.context
-        } catch (error) {
-            user_res = null
-        }
-        profile = user_res
+    const token = req.headers.authorization?.replace('Bearer', '') ?? ''
+    try {
+        const response_user = await axios.get(`https://api.myspa.vn/v1/users/profile`, {
+            headers: {
+                'Authorization': `Bearer ${token.trim()}`
+            }
+        })
+        profile = response_user.data.context
+    } catch (error) {
+        profile = null
     }
     return profile
 }
 //
 const getOrgDetail = async (org_id) => {
     let org
-    if(!org_id) org = null
+    if (!org_id) org = null
     try {
         const response = await axios.get(`${KEY_API}/v1/organizations/${org_id}`)
         org = response.data.context
@@ -38,7 +34,7 @@ const getOrgDetail = async (org_id) => {
 //
 const getProductable = async (item_id, org_id, type) => {
     let detail
-    if(!org_id || !item_id) detail = null
+    if (!org_id || !item_id) detail = null
     let API_URL = ``
     if (type === "SERVICE") API_URL = `${KEY_API}/v1/organizations/${org_id}/services/${item_id}`
     if (type === "PRODUCT") API_URL = `${KEY_API}/v1/organizations/${org_id}/products/${item_id}`

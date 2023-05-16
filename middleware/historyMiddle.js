@@ -6,13 +6,13 @@ const KEY_API = process.env.PAR_API_URL
 
 const verifyUserFromPar = async (req, res) => {
     let profile
-    const token = req.headers.authorization
+    const token = req.headers.authorization?.replace('Bearer','') ?? ''
     if (token) {
         let user_res
         try {
             const response_user = await axios.get(`${KEY_API}/v1/users/profile`, {
                 headers: {
-                    'Authorization': `${token}`
+                    'Authorization': `Bearer ${token.trim()}`
                 }
             })
             user_res = response_user.data.context

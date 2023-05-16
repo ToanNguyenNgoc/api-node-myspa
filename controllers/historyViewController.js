@@ -25,7 +25,7 @@ const historyViewController = {
             res.status(200).json({data:response_user.data})
         } catch (error) {
             // user_res = null
-            res.status(200).json({data:`${error}`})
+            res.status(200).json({data:''})
         }
         // profile = user_res
     }

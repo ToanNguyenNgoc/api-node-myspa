@@ -29,6 +29,7 @@ const mediaRoute = require('./router/mediaRoute')
 const searchHistoryRoute = require('./router/searchHistoryRoute');
 const lolRoute = require("./router/lolRoute");
 const htmlMetadataRoute = require("./router/htmlMetadataRoute");
+const vnpayRoute = require("./router/vnpayRoute")
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -72,6 +73,7 @@ app.use('/v1/media', mediaRoute);
 app.use('/v1/search_history', searchHistoryRoute);
 app.use('/v1/lols', lolRoute);
 app.use('/v1/html_metadata', htmlMetadataRoute);
+app.use('/v1/vnpay', vnpayRoute)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

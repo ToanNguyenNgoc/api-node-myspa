@@ -15,46 +15,47 @@ const trendController = {
     getAll: async (req, res) => {
         const filter = req.query.filter ?? {}
         const page = req.query.page ? parseInt(req.query.page) : 1
-        const limit = req.query.limit ? parseInt(req.query.limit) : 20
+        const limit = req.query.limit ? parseInt(req.query.limit) : 30
         // const limit = 30
         try {
-            let include = []
-            if (req.query.include) include = req.query.include.split('|')
-            const count = await Trend.find(filter).count()
-            const trends = await Trend.aggregate([
-                { $match: filter },
-                {
-                    $lookup: {
-                        from: 'trendservices',
-                        foreignField: '_id',
-                        localField: 'services',
-                        as: 'services'
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'tiktoks',
-                        foreignField: '_id',
-                        localField: 'tiktok',
-                        as: 'tiktok'
-                    }
-                },
-                {
-                    $set: {
-                        'tiktok': { $first: '$tiktok' }
-                    }
-                },
-                { $sample: { size: count } },
-                { $skip: (page * limit) - limit },
-                { $limit: limit }
-            ])
-            const context = {
-                data: trends,
-                current_page: page,
-                per_page: limit,
-                total: count,
-                total_page: Math.ceil(count / limit)
-            }
+            let include = ['services','tiktok']
+            // if (req.query.include) include = req.query.include.split('|')
+            // const count = await Trend.find(filter).count()
+            // const trends = await Trend.aggregate([
+            //     { $match: filter },
+            //     {
+            //         $lookup: {
+            //             from: 'trendservices',
+            //             foreignField: '_id',
+            //             localField: 'services',
+            //             as: 'services'
+            //         }
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'tiktoks',
+            //             foreignField: '_id',
+            //             localField: 'tiktok',
+            //             as: 'tiktok'
+            //         }
+            //     },
+            //     {
+            //         $set: {
+            //             'tiktok': { $first: '$tiktok' }
+            //         }
+            //     },
+            //     { $sample: { size: count } },
+            //     { $skip: (page * limit) - limit },
+            //     { $limit: limit }
+            // ])
+            // const context = {
+            //     data: trends,
+            //     current_page: page,
+            //     per_page: limit,
+            //     total: count,
+            //     total_page: Math.ceil(count / limit)
+            // }
+            const context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, include)
             res.status(200).json({ status: true, data: { context } })
         } catch (error) {
             res.status(500).json({ status: false, message: 'Server error' })

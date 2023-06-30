@@ -138,19 +138,21 @@ const trendController = {
         const { user_access } = await verifyToken(req, res)
         if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [POST]" })
         const trend = await Trend.findById(id)
-        const curTiktok = await Tiktok.findById(trend.tiktok)
-        let t
-        if (!curTiktok) {
-            const tiktok_detail = await getTiktokDetail(id, trend.trend_url)
-            t = tiktok_detail
-            if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
-        }
+        // const curTiktok = await Tiktok.findById(trend.tiktok)
+        // let t
+        // if (!curTiktok) {
+        //     const tiktok_detail = await getTiktokDetail(id, trend.trend_url)
+        //     t = tiktok_detail
+        //     if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
+        // }
         const updateDate = pickBy({
             title: req.body.title,
             content: req.body.content,
-            tiktok: t?._id,
+            image_thumb:req.body.image_thumb,
+            // tiktok: t?._id,
             media_url: req.body.media_url
         }, identity)
+        // console.log(updateDate)
         await trend.updateOne({
             $set: updateDate
         })

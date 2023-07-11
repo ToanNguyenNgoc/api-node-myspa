@@ -6,30 +6,30 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
+const swaggerUI = require('swagger-ui-express');
 const swaggerDocument = require('./swaggerDocument');
-const style = require('./style')
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 
-const bannersTypeRoute = require('./router/bannersTypeRoute');
-const bannersRoute = require('./router/bannersRoute');
-const tikitokRoute = require('./router/tiktokRoute');
-const authRoute = require('./router/authRoute');
-const userRoute = require('./router/userRoute');
-const historyViewRoute = require('./router/historyViewRoute');
-const feedbackRoute = require('./router/feedbackRoute');
-const feedbackFeatureRoute = require('./router/feedbackFeatureRoute');
-const feedbackCateRoute = require('./router/feedbackCateRoute')
-const trendCateRoute = require('./router/trendCateRoute');
-const trendRoute = require('./router/trendRoute');
-const organizationRoute = require('./router/organizationsRoute');
-const trendServiceRoute = require('./router/trendServiceRoute');
-const mediaRoute = require('./router/mediaRoute')
-const searchHistoryRoute = require('./router/searchHistoryRoute');
-const lolRoute = require("./router/lolRoute");
-const htmlMetadataRoute = require("./router/htmlMetadataRoute");
-const vnpayRoute = require("./router/vnpayRoute")
+const bannersTypeRoute = require('./routes/bannersTypeRoute');
+const bannersRoute = require('./routes/bannersRoute');
+const tikitokRoute = require('./routes/tiktokRoute');
+const authRoute = require('./routes/authRoute');
+const userRoute = require('./routes/userRoute');
+const historyViewRoute = require('./routes/historyViewRoute');
+const feedbackRoute = require('./routes/feedbackRoute');
+const feedbackFeatureRoute = require('./routes/feedbackFeatureRoute');
+const feedbackCateRoute = require('./routes/feedbackCateRoute')
+const trendCateRoute = require('./routes/trendCateRoute');
+const trendRoute = require('./routes/trendRoute');
+const organizationRoute = require('./routes/organizationsRoute');
+const trendServiceRoute = require('./routes/trendServiceRoute');
+const mediaRoute = require('./routes/mediaRoute')
+const searchHistoryRoute = require('./routes/searchHistoryRoute');
+const lolRoute = require("./routes/lolRoute");
+const htmlMetadataRoute = require("./routes/htmlMetadataRoute");
+const vnpayRoute = require("./routes/vnpayRoute")
+const swaggerJsDoc = require("swagger-jsdoc");
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -48,16 +48,14 @@ app.use(bodyParser.json({ limit: '50mb' }));
 //     ],
 //     optionsSuccessStatus: 200,
 // }));
-var options = {
-    // customCss: `.swagger-ui ${style} .download-url-wrapper {display:none !important}`
-};
 app.use(cors())
 app.use(morgan('common'));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
 
 // ROUTER
 app.use('/v1/banners_type', bannersTypeRoute);
 app.use('/v1/banners', bannersRoute);
+app.use('/v1/trend_cates', trendCateRoute);
+app.use('/v1/trends', trendRoute);
 app.use('/v1/tiktok', tikitokRoute);
 app.use('/v1/auth', authRoute);
 app.use('/v1/users', userRoute);
@@ -65,8 +63,6 @@ app.use('/v1/history', historyViewRoute);
 app.use('/v1/feedbacks', feedbackRoute);
 app.use('/v1/feedback_features', feedbackFeatureRoute);
 app.use('/v1/feedback_cates', feedbackCateRoute);
-app.use('/v1/trend_cates', trendCateRoute);
-app.use('/v1/trends', trendRoute);
 app.use('/v1/organizations', organizationRoute);
 app.use('/v1/trends_services', trendServiceRoute);
 app.use('/v1/media', mediaRoute);
@@ -74,6 +70,28 @@ app.use('/v1/search_history', searchHistoryRoute);
 app.use('/v1/lols', lolRoute);
 app.use('/v1/html_metadata', htmlMetadataRoute);
 app.use('/v1/vnpay', vnpayRoute)
+
+//[SWAGGER]
+const options = {
+	definition: {
+		openapi: "3.0.0",
+		info: {
+			title: "Beautyx trends API Docs",
+			version: "1.0.0",
+			description: "Beautyx trends API Docs",
+		},
+		servers: [
+			{
+				url: process.env.DOMAIN_V1,
+			},
+		],
+	},
+	apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

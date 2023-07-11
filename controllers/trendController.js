@@ -1,6 +1,7 @@
 const Promise = require('bluebird')
 const Trend = require('../models/trend.module')
 const TrendService = require('../models/trendService.module')
+const Comment = require('../models/comment.module')
 const { getOrgDetail, getProductable } = require('../middleware/historyMiddle')
 const _context = require('../context')
 const verifyToken = require('../utils/verifyToken')
@@ -8,6 +9,7 @@ const verifyToken = require('../utils/verifyToken')
 const { getTiktokDetail } = require('../middleware/getTiktok')
 const Tiktok = require('../models/tiktok.module')
 const { pickBy, identity } = require('lodash')
+const { await } = require('await')
 
 
 const trendController = {
@@ -18,7 +20,7 @@ const trendController = {
         const limit = req.query.limit ? parseInt(req.query.limit) : 30
         // const limit = 30
         try {
-            let include = ['services','tiktok']
+            let include = req.query.include?.split('|') ?? []
             // if (req.query.include) include = req.query.include.split('|')
             // const count = await Trend.find(filter).count()
             // const trends = await Trend.aggregate([
@@ -55,9 +57,22 @@ const trendController = {
             //     total: count,
             //     total_page: Math.ceil(count / limit)
             // }
-            const context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, include)
+            let context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, ['services', 'tiktok'])
+            if (include.includes('comments')) {
+                context = {
+                    ...context,
+                    data: await Promise.map(context.data, async (trend) => {
+                        const comments = await Comment.find({ trend: trend._doc._id }).sort({ createdAt: -1 })
+                        return {
+                            ...trend._doc,
+                            comments: comments
+                        }
+                    })
+                }
+            }
             res.status(200).json({ status: true, data: { context } })
         } catch (error) {
+            console.log(error)
             res.status(500).json({ status: false, message: 'Server error' })
         }
     },
@@ -148,7 +163,7 @@ const trendController = {
         const updateDate = pickBy({
             title: req.body.title,
             content: req.body.content,
-            image_thumb:req.body.image_thumb,
+            image_thumb: req.body.image_thumb,
             // tiktok: t?._id,
             media_url: req.body.media_url
         }, identity)

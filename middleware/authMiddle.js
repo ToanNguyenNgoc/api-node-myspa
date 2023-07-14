@@ -6,13 +6,11 @@ const authMiddleware = {
         if (token) {
             const accessToken = token.split(" ")[1]
             jwt.verify(accessToken, "TOKEN_KEY", (err, user) => {
-                if (err) res.status(403).json({ status: false, message: "Unauthenticated !" })
-                // console.log(user)
+                if (err) return res.status(401).json({ status: false, message: "Unauthenticated !" })
+                next()
             })
-            // console.log(req.user)
-            next()
         } else {
-            res.status(401).json({ status: false, message: "Unauthenticated" })
+            return res.status(401).json({ status: false, message: "Unauthenticated !" })
         }
     }
 }

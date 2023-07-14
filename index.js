@@ -33,8 +33,8 @@ const swaggerJsDoc = require("swagger-jsdoc");
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
 })
 
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -85,6 +85,20 @@ const options = {
 				url: process.env.DOMAIN_V1,
 			},
 		],
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "Bearer",
+					bearerFormat: "JWT",
+				},
+			},
+		},
+		security: [
+			{
+				bearerAuth: [],
+			},
+		],
 	},
 	apis: ["./routes/*.js"],
 };
@@ -94,5 +108,5 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+	console.log(`Example app listening on port ${port}`);
 })

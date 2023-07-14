@@ -8,6 +8,62 @@ const trendController = require('../controllers/trendController')
  *   name: Trends
  *   description: The trends managing API
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     trend:
+ *       type: object
+ *       required:
+ *         - media_url
+ *         - image_thumb
+ *         - title
+ *         - content
+ *         - trend_url
+ *         - organization_id
+ *         - services
+ *       properties:
+ *         media_url:
+ *           type: string
+ *         image_thumb:
+ *           type: string
+ *         title:
+ *           type: string
+ *         content:
+ *           type: string
+ *         trend_url:
+ *           type: string
+ *         organization_id:
+ *           type: number
+ *         services:
+ *           type: array
+ *       example:
+ *         media_url: string
+ *         image_thumb: string
+ *         title: string
+ *         content: string
+ *         trend_url: string
+ *         organization_id: 115
+ *         services: [24]
+ *     put trend:
+ *       type: object
+ *       properties:
+ *         media_url:
+ *           type: string
+ *         image_thumb:
+ *           type: string
+ *         title:
+ *           type: string
+ *         content:
+ *           type: string
+ *       example:
+ *          media_url: string   
+ *          image_thumb: string
+ *          title: string
+ *          content: string 
+ */
+
 /**
  * @swagger
  * /trends:
@@ -63,7 +119,52 @@ route.get('/', trendController.getAll)
  *         description: The trend description by id
  */
 route.get('/:id', trendController.getById)
+
+/**
+ * @swagger
+ * /trends:
+ *   post:
+ *     summary: Post new trend
+ *     tags: [Trends]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/trend'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Return new trend
+ */
 route.post('/', authMiddle.verifyToken, trendController.post)
-route.put('/:id', trendController.update)
+
+/**
+ * @swagger
+ * /trends/{id}:
+ *   put:
+ *     summary: Put trend
+ *     tags: [Trends]
+ *     parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: The trend id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/put trend'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Return new trend
+ */
+route.put('/:id', authMiddle.verifyToken, trendController.update)
 
 module.exports = route

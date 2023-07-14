@@ -43,6 +43,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-fetch": "^2.6.9",
     "nodemon": "^2.0.20",
+    "path": "^0.12.7",
     "qs": "^6.7.0",
     "request": "^2.88.2",
     "serve-favicon": "^2.4.5",

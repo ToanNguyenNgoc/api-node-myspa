@@ -25,6 +25,7 @@ const trendRoute = require('./routes/trendRoute');
 const organizationRoute = require('./routes/organizationsRoute');
 const trendServiceRoute = require('./routes/trendServiceRoute');
 const mediaRoute = require('./routes/mediaRoute')
+const uploadRoute = require('./routes/uploadRoute')
 const searchHistoryRoute = require('./routes/searchHistoryRoute');
 const lolRoute = require("./routes/lolRoute");
 const htmlMetadataRoute = require("./routes/htmlMetadataRoute");
@@ -65,7 +66,8 @@ app.use('/v1/feedback_features', feedbackFeatureRoute);
 app.use('/v1/feedback_cates', feedbackCateRoute);
 app.use('/v1/organizations', organizationRoute);
 app.use('/v1/trends_services', trendServiceRoute);
-app.use('/v1/media', mediaRoute);
+app.use('/media', mediaRoute);
+app.use('/v1/upload', uploadRoute);
 app.use('/v1/search_history', searchHistoryRoute);
 app.use('/v1/lols', lolRoute);
 app.use('/v1/html_metadata', htmlMetadataRoute);

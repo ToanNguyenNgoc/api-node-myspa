@@ -1,20 +1,51 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
+const MediaModel = require('../models/media.model');
+// const dotenv = require('dotenv')
+// dotenv.config()
 
 const uploadController = {
-  media: (req, res) => {
+  media: async (req, res) => {
     if (!req.file) {
-      return res.status(403).json({ status: false, message: 'File not empty' })
+      return res.status(400).json({ status: false, message: 'File not empty' })
     }
-    res.send(req.file)
+    try {
+      const newMedia = new MediaModel({
+        name: req.file.originalname,
+        file_name: req.file.filename,
+        mime_type: req.file.mimetype,
+        size: req.file.size,
+        original_url: `${process.env.HOST}/media/${req.file.filename}`,
+        disk: req.file.destination
+      })
+      const data = await newMedia.save()
+      res.status(200).json({ status: true, data: data })
+    } catch (error) {
+      res.status(400).send({ status: false, message: '' })
+    }
   },
-  media_multiple: (req, res) => {
+  media_multiple: async (req, res) => {
     if (req.files.length === 0) {
-      return res.status(403).json({ status: false, message: 'File not empty' })
+      return res.status(400).json({ status: false, message: 'File not empty' })
     }
-    res.send(req.files)
+    try {
+      const newFiles = req.files.map(item => {
+        return {
+          name: item.originalname,
+          file_name: item.filename,
+          mime_type: item.mimetype,
+          size: item.size,
+          original_url: `${process.env.HOST}/media/${item.filename}`,
+          disk: item.destination
+        }
+      })
+      const dataList = await MediaModel.insertMany(newFiles)
+      res.status(200).json({ status: true, data: dataList })
+    } catch (error) {
+      res.status(400).send({ status: false, message: '' })
+    }
   },
-  up_cloudinary: (req, res) => {
+  up_cloudinary: async (req, res) => {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_NAME,
       api_key: process.env.CLOUDINARY_KEY,
@@ -29,24 +60,19 @@ const uploadController = {
         chunk_size: 6000000,
         folder: 'beautyx'
       },
-
-      // Send cloudinary response or catch error
-      (err, video) => {
+      async (err, resCloud) => {
         if (err) return res.send(err);
         fs.unlinkSync(path);
-        const context = {
-          id: video?.asset_id,
-          model_id: video?.asset_id,
-          mime_type: `${video?.resource_type}/${video?.format}`,
-          disk: video?.public_id,
-          conversions_disk: video?.public_id,
-          size: video?.bytes,
-          created_at: video?.created_at,
-          original_url: video?.url,
-          preview_url: video?.url
-        }
-        // return res.send(video);
-        res.status(200).json({ status: true, data: { context } })
+        const newMedia = new MediaModel({
+          name: req.file.originalname,
+          file_name: req.file.filename,
+          mime_type: req.file.mimetype,
+          size: req.file.size,
+          original_url: resCloud.url,
+          disk: 'cloudinary/beautyx'
+        })
+        const data = await newMedia.save()
+        res.status(200).json({ status: true, data: data })
       }
     );
   }

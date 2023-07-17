@@ -1,8 +1,7 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
 const MediaModel = require('../models/media.model');
-// const dotenv = require('dotenv')
-// dotenv.config()
+const { cloudinaryConfigOptions } = require('../config/cloudinary.config')
 
 const uploadController = {
   media: async (req, res) => {
@@ -46,35 +45,38 @@ const uploadController = {
     }
   },
   up_cloudinary: async (req, res) => {
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_NAME,
-      api_key: process.env.CLOUDINARY_KEY,
-      api_secret: process.env.CLOUDINARY_SECRET
-    });
-    const { path } = req.file;
-    const fName = req.file.originalname.split(".")[0];
-    cloudinary.uploader.upload(
-      path,
-      {
-        public_id: `${fName}`,
-        chunk_size: 6000000,
-        folder: 'beautyx'
-      },
-      async (err, resCloud) => {
-        if (err) return res.send(err);
-        fs.unlinkSync(path);
-        const newMedia = new MediaModel({
-          name: req.file.originalname,
-          file_name: req.file.filename,
-          mime_type: req.file.mimetype,
-          size: req.file.size,
-          original_url: resCloud.url,
-          disk: 'cloudinary/beautyx'
-        })
-        const data = await newMedia.save()
-        res.status(200).json({ status: true, data: data })
-      }
-    );
+    if (!req.file) {
+      return res.status(400).json({ status: false, message: 'File not empty' })
+    }
+    try {
+      cloudinary.config(cloudinaryConfigOptions);
+      const { path } = req.file;
+      const fName = req.file.originalname.split(".")[0];
+      cloudinary.uploader.upload(
+        path,
+        {
+          public_id: `${fName}`,
+          chunk_size: 6000000,
+          folder: 'beautyx'
+        },
+        async (err, resCloud) => {
+          if (err) return res.send(err);
+          fs.unlinkSync(path);
+          const newMedia = new MediaModel({
+            name: req.file.originalname,
+            file_name: req.file.filename,
+            mime_type: req.file.mimetype,
+            size: req.file.size,
+            original_url: resCloud.url,
+            disk: 'cloudinary/beautyx'
+          })
+          const data = await newMedia.save()
+          res.status(200).json({ status: true, data: data })
+        }
+      );
+    } catch (error) {
+      res.status(400).send({ status: false, message: '' })
+    }
   }
 }
 

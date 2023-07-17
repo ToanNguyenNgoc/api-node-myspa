@@ -7,7 +7,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
-const swaggerDocument = require('./swaggerDocument');
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 
@@ -31,6 +30,7 @@ const lolRoute = require("./routes/lolRoute");
 const htmlMetadataRoute = require("./routes/htmlMetadataRoute");
 const vnpayRoute = require("./routes/vnpayRoute")
 const swaggerJsDoc = require("swagger-jsdoc");
+const swagger = require('./docs/_swagger')
 
 dotenv.config();
 mongoose.connect((process.env.MONGO_URL), {
@@ -74,38 +74,7 @@ app.use('/v1/html_metadata', htmlMetadataRoute);
 app.use('/v1/vnpay', vnpayRoute)
 
 //[SWAGGER]
-const options = {
-	definition: {
-		openapi: "3.0.0",
-		info: {
-			title: "Beautyx trends API Docs",
-			version: "1.0.0",
-			description: "Beautyx trends API Docs",
-		},
-		servers: [
-			{
-				url: process.env.DOMAIN_V1,
-			},
-		],
-		components: {
-			securitySchemes: {
-				bearerAuth: {
-					type: "http",
-					scheme: "Bearer",
-					bearerFormat: "JWT",
-				},
-			},
-		},
-		security: [
-			{
-				bearerAuth: [],
-			},
-		],
-	},
-	apis: ["./routes/*.js"],
-};
-
-const specs = swaggerJsDoc(options);
+const specs = swaggerJsDoc(swagger);
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 

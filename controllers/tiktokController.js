@@ -1,19 +1,14 @@
 const axios = require('axios')
 const dotenv = require('dotenv')
-const tiktok = require('tiktok-app-api');
 dotenv.config();
 const ORIGIN = process.env.TIKTOK_ORIGIN
 const KEY = process.env.LICENSE_KEY
 const _context = require('../context')
 const Trend = require('../models/trend.module')
-const Comment = require('../models/comment.module')
-// const verifyToken = require('../utils/verifyToken')
+const Tiktok = require('../models/tiktok.module')
+const Comment = require('../models/comment.module');
+const { getTiktokDetail } = require('../middleware/getTiktok')
 
-let tiktokApp;
-
-(async () => {
-    tiktokApp = await tiktok();
-})();
 
 const tiktokController = {
     getCommentsByUrl: async (req, res) => {
@@ -26,10 +21,8 @@ const tiktokController = {
             res.status(500).json({ status: false, message: error })
         }
     },
-    refreshComment: async (req, res) => {
+    refreshTrend: async (req, res) => {
         const { id } = req.params
-        // const { user_access } = await verifyToken(req, res)
-        // if (!user_access?.admin) return res.status(403).json({ status: false, message: "You can use method [GET]" })
         try {
             const trend = await Trend.findById(id)
             const trend_url = await trend.trend_url
@@ -75,11 +68,18 @@ const tiktokController = {
                 trend: id
             })
             const responseInsert = await Comment.insertMany(data)
+            //[handle refresh statistic: comment_count, play_count,...]
+            const tiktok = await Tiktok.findOne({ trend: id })
+            const dataTiktok = await getTiktokDetail(id, tiktok.trend_url, false)
+            if (dataTiktok) {
+                await tiktok.updateOne({ $set: dataTiktok })
+            }
             res.status(200).json({
                 status: true,
                 message: `refresh comment by trend id = ${id} success !`,
-                requests_count,
-                data: responseInsert
+                requests_count: requests_count + 1,
+                data_comment: responseInsert,
+                data_tiktok: dataTiktok
             })
         } catch (error) {
             res.status(500).json({ status: false, message: error })
@@ -87,7 +87,7 @@ const tiktokController = {
     },
     delete: async (req, res) => {
         res.status(200).json({ status: true, data: 'delete' })
-    }
+    },
 }
 
 module.exports = tiktokController

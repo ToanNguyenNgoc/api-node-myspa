@@ -5,7 +5,7 @@ const ORIGIN = process.env.TIKTOK_ORIGIN
 const KEY = process.env.LICENSE_KEY
 const Tiktok = require('../models/tiktok.module')
 
-const getTiktokDetail = async (trend_id, trend_url) => {
+const getTiktokDetail = async (trend_id, trend_url, create = true) => {
     let data
     const params = {
         license_key: KEY,
@@ -29,10 +29,11 @@ const getTiktokDetail = async (trend_id, trend_url) => {
             trend: trend_id
         }
         const colNew = await new Tiktok(newData)
-        const resCol = await colNew.save()
+        const resCol = create ? await colNew.save() : newData
         data = resCol
     } catch (error) {
         data = null
+        console.log(error)
     }
     return data
 }

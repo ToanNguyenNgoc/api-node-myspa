@@ -114,7 +114,7 @@ const trendController = {
         const response = await newTrend.save()
         const trend_id = await response._id
         //handle up to tiktok model
-        const tiktok_detail = await getTiktokDetail(trend_id, req.body.trend_url)
+        const tiktok_detail = await getTiktokDetail(trend_id, req.body.trend_url, true)
         // if (!tiktok_detail) return res.status(404).json({ status: false, message: 'Cannot find tiktok' })
         //
         const services_id = req.body.services

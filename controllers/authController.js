@@ -1,6 +1,9 @@
 const User = require("../models/user.module")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const axios = require('axios')
+const { await } = require("await")
+const API_PAR = process.env.PAR_API_URL
 
 const authController = {
     registerUser: async (req, res) => {
@@ -36,7 +39,21 @@ const authController = {
                 res.status(200).json({ status: true, context: { ...res_user, token: token } })
             }
         } catch (error) {
-            res.status(500).json(err)
+            res.status(500).json(error)
+        }
+    },
+    loginBtx: async (req, res) => {
+        console.log(req.body)
+        try {
+            const response = await axios.post(`${API_PAR}/v1/auth/login`, {
+                email: req.body.email,
+                password: req.body.password,
+                platform: req.body.platform
+            })
+            res.status(200).json(response.data)
+        } catch (error) {
+            console.log(error)
+            res.status(403).json({ status: false, message: 'Login fail' })
         }
     }
 }

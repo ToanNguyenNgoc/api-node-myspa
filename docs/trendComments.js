@@ -1,5 +1,5 @@
 const getTrendComments = {
-  tags: ['TrendComments'],
+  tags: ['Tiktok'],
   summary: 'Return the list of comment by trend id',
   parameters: [
     {
@@ -28,6 +28,24 @@ const getTrendComments = {
     },
   }
 }
+const getRefreshTrend = {
+  tags: ['Tiktok'],
+  summary: 'Refresh trend by trend id',
+  parameters: [
+    {
+      name: 'id',
+      type: 'integer',
+      in: 'path',
+      description: 'The trend id',
+      required: true
+    },
+  ],
+  responses: {
+    '200': {
+      description: 'Return trend by trend id'
+    },
+  }
+}
 module.exports = {
-  getTrendComments
+  getTrendComments, getRefreshTrend
 }

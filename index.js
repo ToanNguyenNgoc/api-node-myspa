@@ -29,6 +29,7 @@ const searchHistoryRoute = require('./routes/searchHistoryRoute');
 const lolRoute = require("./routes/lolRoute");
 const htmlMetadataRoute = require("./routes/htmlMetadataRoute");
 const vnpayRoute = require("./routes/vnpayRoute")
+const zaloRoute = require("./routes/zaloRoute")
 const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger')
 
@@ -72,6 +73,7 @@ app.use('/v1/search_history', searchHistoryRoute);
 app.use('/v1/lols', lolRoute);
 app.use('/v1/html_metadata', htmlMetadataRoute);
 app.use('/v1/vnpay', vnpayRoute)
+app.use('/v1/zalo', zaloRoute)
 
 //[SWAGGER]
 const specs = swaggerJsDoc(swagger);

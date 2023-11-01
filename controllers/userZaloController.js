@@ -12,14 +12,15 @@ const userZaloController = {
   },
   create: async (request, response) => {
     try {
-      const oldUser = await UserZalo.findOne({ id: request.body.id, platform:response.platform })
+      const oldUser = await UserZalo.findOne({ id: request.body.id, platform: response.platform })
       if (oldUser) {
-        await oldUser.updateOne({$set:request.body})
+        await oldUser.updateOne({ $set: request.body })
         return response.json({ data: oldUser })
+      } else {
+        const user = new UserZalo(request.body)
+        const data = await user.save()
+        return response.json({ data })
       }
-      const user = new UserZalo(request.body)
-      const data = await user.save()
-      return response.json({ data })
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }

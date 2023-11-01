@@ -12,7 +12,7 @@ const userZaloController = {
   },
   create: async (request, response) => {
     try {
-      const oldUser = await UserZalo.findOne({ id: request.body.id, platform: response.platform })
+      const oldUser = await UserZalo.findOne({ id: request.body.id, platform: request.body.platform })
       if (oldUser) {
         await oldUser.updateOne({ $set: request.body })
         return response.json({ data: oldUser })

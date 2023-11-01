@@ -8,7 +8,7 @@ const zaloController = {
         return res.status(400).json({ message: 'zalo_user_ids is required' })
       }
       body.zalo_user_ids.forEach(async (id) => {
-        await axios.post('https://openapi.mini.zalo.me/notification/template', {
+        const result = await axios.post('https://openapi.mini.zalo.me/notification/template', {
           'templateId': '00126fd75392bacce383',
           'templateData': {
             "buttonText": body.button_text,
@@ -24,6 +24,7 @@ const zaloController = {
             'X-User-Id': id
           }
         })
+        console.log(result)
       })
       return res.status(200).json({ message: 'Send notification success !' })
     } catch (error) {

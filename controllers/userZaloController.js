@@ -14,6 +14,7 @@ const userZaloController = {
     try {
       const oldUser = await UserZalo.findOne({ id: request.body.id })
       if (oldUser) {
+        await oldUser.updateOne({$set:request.body})
         return response.json({ data: oldUser })
       }
       const user = new UserZalo(request.body)

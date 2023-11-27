@@ -45,7 +45,6 @@ const userZaloController = {
         const data = await device.save()
         return response.json({ data })
       }
-      return response.json({ data })
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }

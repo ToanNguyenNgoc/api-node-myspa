@@ -37,7 +37,7 @@ const userZaloController = {
   },
   createTokenNoti: async (request, response) => {
     try {
-      const oldToken = await DeviceToken.findOne({ token: response.body.token })
+      const oldToken = await DeviceToken.findOne({ token: request.body.token })
       if (oldToken) {
         return response.json({ oldToken })
       } else {

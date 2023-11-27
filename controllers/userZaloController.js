@@ -1,5 +1,6 @@
 const UserZalo = require('../models/userZalo.module')
 const _context = require('../context')
+const DeviceToken = require('../models/deviceToken.module')
 
 const userZaloController = {
   findAll: async (request, response) => {
@@ -30,6 +31,15 @@ const userZaloController = {
       const id = request.params.id
       await UserZalo.deleteOne({ id: id })
       return response.json({ message: 'Deleted' })
+    } catch (error) {
+      return response.json({ status: false, message: 'Server error' })
+    }
+  },
+  createTokenNoti: async (request, response) => {
+    try {
+      const device = new DeviceToken(request.body)
+      const data = await device.save()
+      return response.json({ data })
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }

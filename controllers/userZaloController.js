@@ -37,8 +37,14 @@ const userZaloController = {
   },
   createTokenNoti: async (request, response) => {
     try {
-      const device = new DeviceToken(request.body)
-      const data = await device.save()
+      const oldToken = await DeviceToken.findOne({ token: response.body.token })
+      if (oldToken) {
+        return response.json({ oldToken })
+      } else {
+        const device = new DeviceToken(request.body)
+        const data = await device.save()
+        return response.json({ data })
+      }
       return response.json({ data })
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })

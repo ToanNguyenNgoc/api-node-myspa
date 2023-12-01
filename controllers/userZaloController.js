@@ -48,6 +48,14 @@ const userZaloController = {
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }
+  },
+  fillAllFCMToken: async (request, response) => {
+    try {
+      const context = await _context.paginateHistory(request, DeviceToken, {}, { createdAt: -1 })
+      return response.json({ status: true, data: { context } })
+    } catch (error) {
+      return response.json({ status: false, message: 'Server error' })
+    }
   }
 }
 module.exports = userZaloController

@@ -7,5 +7,6 @@ route.post('/users', userZaloController.create)
 route.delete('/users/:id', userZaloController.delete)
 route.post('/notifications', zaloController.sendNotification)
 route.post('/device_token', userZaloController.createTokenNoti)
+route.get('/device_token', userZaloController.fillAllFCMToken)
 
 module.exports = route

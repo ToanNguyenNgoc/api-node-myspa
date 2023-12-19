@@ -19,7 +19,11 @@ const mobaController = {
   get: async (req, res) => {
     try {
       const dis = req.params.route.replaceAll('-', '/')
-      const response = await instance.get(dis)
+      const response = await instance.get(dis, {
+        headers: {
+          'USER-TOKEN': req.headers['user-token']
+        }
+      })
       return res.json(response.data)
     } catch (error) {
       res.status(500).json(error)

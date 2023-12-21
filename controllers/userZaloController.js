@@ -1,6 +1,7 @@
 const UserZalo = require('../models/userZalo.module')
 const _context = require('../context')
 const DeviceToken = require('../models/deviceToken.module')
+const admin = require('firebase-admin')
 
 const userZaloController = {
   findAll: async (request, response) => {
@@ -53,6 +54,33 @@ const userZaloController = {
     try {
       const context = await _context.paginateHistory(request, DeviceToken, {}, { createdAt: -1 })
       return response.json({ status: true, data: { context } })
+    } catch (error) {
+      return response.json({ status: false, message: 'Server error' })
+    }
+  },
+  FCMNotification: async (req, res) => {
+    try {
+      const body = req.body
+      const devicesToken = await DeviceToken.find()
+      let message = {
+        notification: {
+          title: body.title || 'Message Title',
+          body: body.description || 'Message Body',
+        },
+        token: '',
+        data: body
+      };
+      for (var i = 0; i < devicesToken.length; i++) {
+        message.token = devicesToken[i].token
+        admin.messaging().send(message)
+          .then((response) => {
+            console.log('Successfully sent message:', response);
+          })
+          .catch((error) => {
+            console.log('Error sending message:', error);
+          });
+      }
+      return res.json({ data: 'OK' })
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }

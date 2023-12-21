@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const initializeFirebase = require('./config/firebase.config')
 const swaggerUI = require('swagger-ui-express');
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
@@ -35,6 +36,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger')
 
 dotenv.config();
+initializeFirebase();
 mongoose.connect((process.env.MONGO_URL), {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,

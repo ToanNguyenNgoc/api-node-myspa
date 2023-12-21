@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const { login, loginBtx, loginBtxSchema, loginSchema } = require('./auth')
 const { getTrends, getTrend, postTrend, putTrend, postTrendSchema, putTrendSchema } = require('./trend')
 const { getTrendComments, getRefreshTrend } = require('./trendComments')
+const { postNotification, postNotificationSchema } = require('./beautyxNotification')
 const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./upload')
 const { getHistoryView } = require('./history')
 dotenv.config()
@@ -28,7 +29,8 @@ const swagger = {
         },
       },
       schemas: {
-        loginSchema, loginBtxSchema, postTrendSchema, putTrendSchema
+        loginSchema, loginBtxSchema, postTrendSchema, putTrendSchema,
+        postNotificationSchema
       },
     },
     security: [
@@ -42,6 +44,7 @@ const swagger = {
       { name: 'Tiktok', description: 'The trend comments managing API' },
       // { name: 'History', description: 'The history & search history managing API' },
       { name: 'Upload', description: 'The uploads managing API' },
+      { name: 'BeautyxNotification', description: 'The notification managing API' }
     ],
     paths: {
       '/auth/login': { post: login },
@@ -57,7 +60,8 @@ const swagger = {
 
       '/upload/media': { post: uploadMedia },
       '/upload/media_multiple': { post: uploadMultipleMedia },
-      '/upload/cloudinary': { post: uploadMediaCloudinary }
+      '/upload/cloudinary': { post: uploadMediaCloudinary },
+      '/zalo/fcm-notification': { post: postNotification }
     },
   },
   apis: ["./routes/*.js"],

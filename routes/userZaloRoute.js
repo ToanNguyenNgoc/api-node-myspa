@@ -10,6 +10,6 @@ route
   .post('/notifications', zaloController.sendNotification)
   .post('/device_token', userZaloController.createTokenNoti)
   .get('/device_token', userZaloController.fillAllFCMToken)
-  .post('/fcm-notification', userZaloController.FCMNotification)
+  .post('/fcm-notification', authMiddle.verifyToken, userZaloController.FCMNotification)
 
 module.exports = route

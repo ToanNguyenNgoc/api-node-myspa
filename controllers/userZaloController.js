@@ -82,7 +82,7 @@ const userZaloController = {
       }
       return res.json({ data: 'OK' })
     } catch (error) {
-      return response.json({ status: false, message: 'Server error' })
+      return res.json({ status: false, message: 'Server error' })
     }
   }
 }

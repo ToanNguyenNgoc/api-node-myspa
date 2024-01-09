@@ -76,7 +76,8 @@ const userZaloController = {
           .then((response) => {
             console.log('Successfully sent message:', response);
           })
-          .catch((error) => {
+          .catch(async (error) => {
+            await DeviceToken.deleteOne({token:devicesToken[i].token})
             console.log('Error sending message:', error);
           });
       }

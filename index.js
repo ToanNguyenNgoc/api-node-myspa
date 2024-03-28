@@ -33,6 +33,7 @@ const vnpayRoute = require("./routes/vnpayRoute")
 const userZaloRoute = require("./routes/userZaloRoute")
 const mobaRoute = require("./routes/mobaRoute")
 const myspaWheelRoute = require("./routes/myspaWheelRoute")
+const _butlRoute = require("./routes/_butlRoute");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger')
 
@@ -80,6 +81,8 @@ app.use('/v1/vnpay', vnpayRoute)
 app.use('/v1/zalo', userZaloRoute)
 app.use('/v1/moba', mobaRoute)
 app.use('/v1/myspa-wheel', myspaWheelRoute)
+app.use('/api', _butlRoute)
+
 
 //[SWAGGER]
 const specs = swaggerJsDoc(swagger);

@@ -1,4 +1,24 @@
 const MyspaWheel = require("../models/myspaWheel.model")
+const jwt = require('jsonwebtoken');
+const axios = require('axios')
+
+const apiKeySid = 'SK.0.esIUU5x1ukWj9wZf4Ky2pIIWesYdDVK8';
+const apiKeySecret = "RFYyRzNPVkxleXpkbDA1dUJnQ1VqVUhRYVlxQWtXdA==";
+
+const createToken = () => {
+  var now = Math.floor(Date.now() / 1000);
+  var exp = now + 3600;
+
+  var header = { cty: "stringee-api;v=1" };
+  var payload = {
+    jti: apiKeySid + "-" + now,
+    iss: apiKeySid,
+    exp: exp,
+    rest_api: 1
+  };
+  var token = jwt.sign(payload, apiKeySecret, { algorithm: 'HS256', header: header })
+  return token
+}
 
 const myspaWheelController = {
   postWheel: async (request, res) => {
@@ -29,6 +49,25 @@ const myspaWheelController = {
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }
+  },
+  sendOTP: async (req, res) => {
+    const token = createToken()
+    console.log(token)
+    const response = await axios.post('https://api.stringee.com:443/v1/sms', {
+      sms: [{
+        "from": "0392645745",
+        "to": "0559724416",
+        "text": "CONTENT_SMS"
+      }]
+    }, {
+      headers: {
+        'X-STRINGEE-AUTH': createToken(),
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    console.log(response)
+    return res.json({ data: response.data })
   }
 }
 

@@ -21,55 +21,55 @@ const trendController = {
         // const limit = 30
         try {
             let include = req.query.include?.split('|') ?? []
-            // if (req.query.include) include = req.query.include.split('|')
-            // const count = await Trend.find(filter).count()
-            // const trends = await Trend.aggregate([
-            //     { $match: filter },
-            //     {
-            //         $lookup: {
-            //             from: 'trendservices',
-            //             foreignField: '_id',
-            //             localField: 'services',
-            //             as: 'services'
-            //         }
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: 'tiktoks',
-            //             foreignField: '_id',
-            //             localField: 'tiktok',
-            //             as: 'tiktok'
-            //         }
-            //     },
-            //     {
-            //         $set: {
-            //             'tiktok': { $first: '$tiktok' }
-            //         }
-            //     },
-            //     { $sample: { size: count } },
-            //     { $skip: (page * limit) - limit },
-            //     { $limit: limit }
-            // ])
-            // const context = {
-            //     data: trends,
-            //     current_page: page,
-            //     per_page: limit,
-            //     total: count,
-            //     total_page: Math.ceil(count / limit)
-            // }
-            let context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, ['services', 'tiktok'])
-            if (include.includes('comments')) {
-                context = {
-                    ...context,
-                    data: await Promise.map(context.data, async (trend) => {
-                        const comments = await Comment.find({ trend: trend._doc._id }).sort({ createdAt: -1 })
-                        return {
-                            ...trend._doc,
-                            comments: comments
-                        }
-                    })
-                }
+            if (req.query.include) include = req.query.include.split('|')
+            const count = await Trend.find(filter).count()
+            const trends = await Trend.aggregate([
+                { $match: filter },
+                {
+                    $lookup: {
+                        from: 'trendservices',
+                        foreignField: '_id',
+                        localField: 'services',
+                        as: 'services'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'tiktoks',
+                        foreignField: '_id',
+                        localField: 'tiktok',
+                        as: 'tiktok'
+                    }
+                },
+                {
+                    $set: {
+                        'tiktok': { $first: '$tiktok' }
+                    }
+                },
+                { $sample: { size: count } },
+                { $skip: (page * limit) - limit },
+                { $limit: limit }
+            ])
+            const context = {
+                data: trends,
+                current_page: page,
+                per_page: limit,
+                total: count,
+                total_page: Math.ceil(count / limit)
             }
+            // let context = await _context.paginateHistory(req, Trend, filter, { createdAt: -1 }, ['services', 'tiktok'])
+            // if (include.includes('comments')) {
+            //     context = {
+            //         ...context,
+            //         data: await Promise.map(context.data, async (trend) => {
+            //             const comments = await Comment.find({ trend: trend._doc._id }).sort({ createdAt: -1 })
+            //             return {
+            //                 ...trend._doc,
+            //                 comments: comments
+            //             }
+            //         })
+            //     }
+            // }
             res.status(200).json({ status: true, data: { context } })
         } catch (error) {
             console.log(error)

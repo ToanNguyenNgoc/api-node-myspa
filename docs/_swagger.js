@@ -4,6 +4,7 @@ const { getTrends, getTrend, postTrend, putTrend, postTrendSchema, putTrendSchem
 const { getTrendComments, getRefreshTrend } = require('./trendComments')
 const { postNotification, postNotificationSchema } = require('./beautyxNotification')
 const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./upload')
+const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSchema, putBrandAppConfSchema } = require('./brandAppConf')
 const { getHistoryView } = require('./history')
 dotenv.config()
 
@@ -30,7 +31,8 @@ const swagger = {
       },
       schemas: {
         loginSchema, loginBtxSchema, postTrendSchema, putTrendSchema,
-        postNotificationSchema
+        postNotificationSchema,
+        postBrandAppConfSchema, putBrandAppConfSchema
       },
     },
     security: [
@@ -44,7 +46,8 @@ const swagger = {
       { name: 'Tiktok', description: 'The trend comments managing API' },
       // { name: 'History', description: 'The history & search history managing API' },
       { name: 'Upload', description: 'The uploads managing API' },
-      { name: 'BeautyxNotification', description: 'The notification managing API' }
+      { name: 'BeautyxNotification', description: 'The notification managing API' },
+      { name: 'Brand App Conf', description: 'The brand app config' }
     ],
     paths: {
       '/auth/login': { post: login },
@@ -61,7 +64,10 @@ const swagger = {
       '/upload/media': { post: uploadMedia },
       '/upload/media_multiple': { post: uploadMultipleMedia },
       '/upload/cloudinary': { post: uploadMediaCloudinary },
-      '/zalo/fcm-notification': { post: postNotification }
+      '/zalo/fcm-notification': { post: postNotification },
+
+      '/brand-app': { post: postBrandAppConf },
+      '/brand-app/{subdomain}': { get: getBrandAppConf, put: putBrandAppConf }
     },
   },
   apis: ["./routes/*.js"],

@@ -11,8 +11,12 @@ const brandApp = mongoose.Schema({
   },
   is_on_product: {
     type: Boolean,
-    require: true
-  }
+    require: true,
+  },
+  is_on_payment_sdk: {
+    type: Boolean,
+    require: false
+  },
 }, { timestamps: true })
 
 const BrandApp = mongoose.model("BrandApp", brandApp)

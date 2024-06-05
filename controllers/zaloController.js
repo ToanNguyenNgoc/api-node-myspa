@@ -5,7 +5,7 @@ const zaloController = {
     try {
       const body = req.body
       const MINI_APP_ID = req.body.mini_app_id
-      if(!MINI_APP_ID) return res.status(400).json({ message: 'Mini app id is required' })
+      if (!MINI_APP_ID) return res.status(400).json({ message: 'Mini app id is required' })
       if (!body.zalo_user_ids || body.zalo_user_ids.length === 0) {
         return res.status(400).json({ message: 'zalo_user_ids is required' })
       }
@@ -32,6 +32,10 @@ const zaloController = {
     } catch (error) {
       return response.json({ status: false, message: 'Server error' })
     }
+  },
+  notifyPaymentBankZalo: async (req, res) => {
+    console.log(JSON.stringify(req.body))
+    return res.status(200).json({ body: req.body })
   }
 }
 

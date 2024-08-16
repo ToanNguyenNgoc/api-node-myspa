@@ -10,6 +10,9 @@ const MobileAppsSchema = mongoose.Schema({
     access_token: {
         type: String
     },
+    fullname: {
+        type: String
+    },
     created_at: { type: Date, default: Date.now }
 })
 

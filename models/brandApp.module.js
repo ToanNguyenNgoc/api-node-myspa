@@ -17,6 +17,10 @@ const brandApp = mongoose.Schema({
     type: Boolean,
     require: false
   },
+  is_agency:{
+    type:Boolean,
+    require:false
+  }
 }, { timestamps: true })
 
 const BrandApp = mongoose.model("BrandApp", brandApp)

@@ -3,7 +3,8 @@ const putBrandAppConfSchema = {
   properties: {
     is_on_service: { type: 'boolean' },
     is_on_product: { type: 'boolean' },
-    is_on_payment_sdk: { type: 'boolean' }
+    is_on_payment_sdk: { type: 'boolean' },
+    is_agency: { type: 'boolean' }
   }
 }
 const postBrandAppConfSchema = {
@@ -12,7 +13,8 @@ const postBrandAppConfSchema = {
     subdomain: { type: 'string', example: 'test' },
     is_on_service: { type: 'boolean' },
     is_on_product: { type: 'boolean' },
-    is_on_payment_sdk: { type: 'boolean' }
+    is_on_payment_sdk: { type: 'boolean' },
+    is_agency: { type: 'boolean' }
   }
 }
 

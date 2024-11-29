@@ -36,7 +36,8 @@ const myspaWheelRoute = require("./routes/myspaWheelRoute")
 const _butlRoute = require("./routes/_butlRoute");
 const brandAppRoute = require("./routes/brandAppRoute")
 const _beautyRoute = require("./routes/_beautyxRoute")
-const mobileAppRoute  = require("./routes/mobileAppRoute")
+const mobileAppRoute = require("./routes/mobileAppRoute")
+const loggerRoute = require("./routes/logger.route")
 const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger')
 
@@ -87,7 +88,9 @@ app.use('/v1/myspa-wheel', myspaWheelRoute)
 app.use('/v1/brand-app', brandAppRoute)
 app.use('/api', _butlRoute)
 app.use('/beautyx', _beautyRoute),
-app.use('/v1/mobile-app',mobileAppRoute)
+app.use('/v1/mobile-app', mobileAppRoute),
+app.use('/v1/loggers', loggerRoute)
+
 
 
 //[SWAGGER]

@@ -6,6 +6,7 @@ const { postNotification, postNotificationSchema } = require('./beautyxNotificat
 const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./upload')
 const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSchema, putBrandAppConfSchema } = require('./brandAppConf')
 const { getHistoryView } = require('./history')
+const { postLogger, postLoggerSchema } = require('./logger.doc')
 dotenv.config()
 
 const swagger = {
@@ -32,7 +33,8 @@ const swagger = {
       schemas: {
         loginSchema, loginBtxSchema, postTrendSchema, putTrendSchema,
         postNotificationSchema,
-        postBrandAppConfSchema, putBrandAppConfSchema
+        postBrandAppConfSchema, putBrandAppConfSchema,
+        postLoggerSchema
       },
     },
     security: [
@@ -47,7 +49,9 @@ const swagger = {
       // { name: 'History', description: 'The history & search history managing API' },
       { name: 'Upload', description: 'The uploads managing API' },
       { name: 'BeautyxNotification', description: 'The notification managing API' },
-      { name: 'Brand App Conf', description: 'The brand app config' }
+      { name: 'Brand App Conf', description: 'The brand app config' },
+      { name: 'Logger', description: 'Log request' },
+
     ],
     paths: {
       '/auth/login': { post: login },
@@ -67,7 +71,10 @@ const swagger = {
       '/zalo/fcm-notification': { post: postNotification },
 
       '/brand-app': { post: postBrandAppConf },
-      '/brand-app/{subdomain}': { get: getBrandAppConf, put: putBrandAppConf }
+      '/brand-app/{subdomain}': { get: getBrandAppConf, put: putBrandAppConf },
+
+      '/loggers': { post: postLogger },
+
     },
   },
   apis: ["./routes/*.js"],

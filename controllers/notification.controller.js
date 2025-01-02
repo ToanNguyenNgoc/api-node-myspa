@@ -5,6 +5,17 @@ const admin = require('firebase-admin');
 const telephonesAdmin = process.env.TELEPHONES_ADMIN ? process.env.TELEPHONES_ADMIN.split(',') : []
 
 const notificationController = {
+  getAdmins: (req, res) => {
+    return res.status(200).json({
+      data: {
+        data: telephonesAdmin.map(i => ({ telephone: i })),
+        current_page: 1,
+        per_page: 15,
+        total: telephonesAdmin.length,
+        total_page: 1
+      }
+    })
+  },
   subscribe: async (req, res) => {
     if (!telephonesAdmin.includes(req.body.telephone)) {
       return res.status(403).json({ status: false, data: { message: "This account is not subscribe notification admin!" } })

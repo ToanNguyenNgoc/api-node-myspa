@@ -36,7 +36,9 @@ const notificationController = {
         title: 'Có đơn hàng thanh toán mới',
         body: `Thanh đơn hàng ${formatPrice(order?.payment_gateway?.amount || 0)}đ từ ${order?.user?.fullname || 'Khách'} qua nền tảng ${order?.platform}`,
       },
-      data: {}
+      data: {
+        payload_id: 18
+      }
     };
     const device_tokens = await NotificationAdmin.find();
     for (var i = 0; i < device_tokens.length; i++) {

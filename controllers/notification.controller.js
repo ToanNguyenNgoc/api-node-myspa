@@ -63,6 +63,7 @@ const notificationController = {
     //Log order
     try {
       const logOrder = new Notification({
+        is_demo: order?.organization?.subdomain == 'demo',
         user_telephone: order?.user?.telephone,
         user_name: order?.user?.fullname,
         user_payment_amount: order?.payment_gateway?.amount,

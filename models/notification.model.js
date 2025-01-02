@@ -4,6 +4,7 @@ const notificationSchema = mongoose.Schema({
   user_telephone: { type: String, required: false },
   user_name: { type: String, require: false },
   user_payment_amount: { type: String, require: false },
+  user_order_id: { type: Number, required: false },
   platform: { type: String, require: false },
   order: { type: String, required: true },
 }, { timestamps: true });

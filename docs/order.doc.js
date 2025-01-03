@@ -23,6 +23,13 @@ const getOrders = {
       default: true
     },
     {
+      name: 'filter[is_read]',
+      in: 'query',
+      type: 'boolean',
+      description: 'Get list of the orders by read',
+      enum: ['true', 'false'],
+    },
+    {
       name: 'filter[platform]',
       in: 'query',
       type: 'string',
@@ -48,6 +55,26 @@ const getOrders = {
   },
 }
 
+const getOrder = {
+  tags: ['Orders'],
+  summary: 'Return order detail by id',
+  parameters: [
+    {
+      name: 'order_id',
+      type: 'integer',
+      in: 'path',
+      description: 'The order id',
+      required: true
+    },
+  ],
+  responses: {
+    '200': {
+      description: 'The order description by id'
+    },
+  }
+}
+
 module.exports = {
-  getOrders
+  getOrders,
+  getOrder
 }

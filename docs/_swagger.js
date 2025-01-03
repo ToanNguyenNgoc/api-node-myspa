@@ -7,7 +7,7 @@ const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./u
 const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSchema, putBrandAppConfSchema } = require('./brandAppConf')
 const { getHistoryView } = require('./history')
 const { postLogger, postLoggerSchema } = require('./logger.doc')
-const { getOrders } = require('./order.doc')
+const { getOrders, getOrder } = require('./order.doc')
 dotenv.config()
 
 const swagger = {
@@ -78,6 +78,7 @@ const swagger = {
       '/loggers': { post: postLogger },
 
       '/notifications/order': { get: getOrders },
+      '/notifications/order/{order_id}': { get: getOrder },
 
     },
   },

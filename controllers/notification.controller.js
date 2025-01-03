@@ -42,9 +42,27 @@ const notificationController = {
     }
   },
   get: async (req, res) => {
-    let filter = req.query.filter || {}
-    const context = await _context.paginateHistory(req, Notification, filter, { createdAt: -1 }, []);
-    return res.status(200).json({ status: true, data: { context } })
+    try {
+      let filter = req.query.filter || {}
+      const context = await _context.paginateHistory(req, Notification, filter, { createdAt: -1 }, []);
+      return res.status(200).json({ status: true, data: { context } })
+    } catch (error) {
+      return res.json({ status: false, message: 'Server error' })
+    }
+  },
+  getOrderDetail: async (req, res) => {
+    try {
+      const { order_id } = req.params;
+      const context = await Notification.findOneAndUpdate(
+        { user_order_id: order_id },
+        { is_read: true },
+        { new: true }
+      )
+      if (!context) return res.status(404).json({ status: false, message: 'Not found' })
+      return res.status(200).json({ status: true, data: { context } });
+    } catch (error) {
+      return res.json({ status: false, message: 'Server error' })
+    }
   },
   post: async (req, res) => {
     const { order } = req.body

@@ -22,12 +22,14 @@ const context = {
             .skip((page * limit) - limit)
             .limit(limit)
         const count = await collection.find({ ...filter }).sort({ ...sort }).count()
+        const total_page = Math.ceil(count / limit)
         const context = {
             data: data,
             current_page: page,
             per_page: limit,
             total: count,
-            total_page: Math.ceil(count / limit)
+            total_page,
+            last_page: Math.ceil(count / limit)
         }
         return context
     },

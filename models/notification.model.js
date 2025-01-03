@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const notificationSchema = mongoose.Schema({
   is_demo: { type: Boolean, required: false },
+  is_read: { type: Boolean, required: false, default: false },
   user_telephone: { type: String, required: false },
   user_name: { type: String, require: false },
   user_payment_amount: { type: String, require: false },

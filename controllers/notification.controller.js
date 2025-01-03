@@ -1,6 +1,7 @@
 const { Notification, NotificationAdmin } = require("../models/notification.model");
 const { formatPrice } = require("../functions/utils");
 const admin = require('firebase-admin');
+const _context = require('../context')
 
 const telephonesAdmin = process.env.TELEPHONES_ADMIN ? process.env.TELEPHONES_ADMIN.split(',') : []
 
@@ -40,6 +41,11 @@ const notificationController = {
       return res.json({ status: false, message: 'Server error' })
     }
   },
+  get: async (req, res) => {
+    let filter = req.query.filter || {}
+    const context = await _context.paginateHistory(req, Notification, filter, { createdAt: -1 }, []);
+    return res.status(200).json({ status: true, data: { context } })
+  },
   post: async (req, res) => {
     const { order } = req.body
     let message = {
@@ -69,7 +75,7 @@ const notificationController = {
         user_payment_amount: order?.payment_gateway?.amount,
         user_order_id: order?.id,
         platform: order?.platform,
-        order: JSON.stringify(order)
+        order: JSON.stringify(order),
       })
       const response = await logOrder.save();
       return res.status(200).json({ data: response })

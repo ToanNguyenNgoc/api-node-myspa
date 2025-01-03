@@ -7,6 +7,7 @@ const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./u
 const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSchema, putBrandAppConfSchema } = require('./brandAppConf')
 const { getHistoryView } = require('./history')
 const { postLogger, postLoggerSchema } = require('./logger.doc')
+const { getOrders } = require('./order.doc')
 dotenv.config()
 
 const swagger = {
@@ -51,6 +52,7 @@ const swagger = {
       { name: 'BeautyxNotification', description: 'The notification managing API' },
       { name: 'Brand App Conf', description: 'The brand app config' },
       { name: 'Logger', description: 'Log request' },
+      { name: 'Orders', description: 'The orders managing API' }
 
     ],
     paths: {
@@ -74,6 +76,8 @@ const swagger = {
       '/brand-app/{subdomain}': { get: getBrandAppConf, put: putBrandAppConf },
 
       '/loggers': { post: postLogger },
+
+      '/notifications/order': { get: getOrders },
 
     },
   },

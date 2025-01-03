@@ -1,8 +1,20 @@
 const context = {
-    paginateHistory: async (req, collection, filter, sort, include) => {
+    paginateHistory: async (req, collection, filterParams, sort, include) => {
         const populate = include ?? []
         const page = req.query.page ? parseInt(req.query.page) : 1
         const limit = req.query.limit ? parseInt(req.query.limit) : 15
+
+        //Handle search keyword
+        let filter = filterParams;
+        if (req.query.search_column && req.query.search) {
+            const columns_search = req.query.search_column.split(',')
+            filter = Object.assign(filter, {
+                $or: columns_search.map(column => ({
+                    [column]: new RegExp(req.query.search, 'i')
+                }))
+            })
+        }
+
         const data = await collection
             .find({ ...filter })
             .sort({ ...sort })

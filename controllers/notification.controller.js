@@ -8,7 +8,7 @@ const telephonesAdmin = process.env.TELEPHONES_ADMIN ? process.env.TELEPHONES_AD
 const notificationController = {
   getAdmins: (req, res) => {
     return res.status(200).json({
-      data: {
+      context: {
         data: telephonesAdmin.map(i => ({ telephone: i })),
         current_page: 1,
         per_page: 15,

@@ -68,6 +68,10 @@ const notificationController = {
   },
   post: async (req, res) => {
     const { order } = req.body
+    const context = await Notification.findOne({ user_order_id: order?.id });
+    if (context) {
+      return res.status(403).json({ status: true, message: 'Order is exist' })
+    }
     let message = {
       notification: {
         title: 'Có đơn hàng thanh toán mới',

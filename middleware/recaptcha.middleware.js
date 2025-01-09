@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const recaptchaMiddleware = {
   verify: (req, res, next) => {
-    const recaptcha = req.body.recaptcha
+    const recaptcha = req.body.recaptcha || req.query.recaptcha
     if (!recaptcha || recaptcha === '') {
       return res.status(401).send({ statusCode: 401, message: 'Recaptcha is required' })
     }

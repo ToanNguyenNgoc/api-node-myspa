@@ -99,7 +99,23 @@ app.use('/v1/notifications', notificationRoute)
 const specs = swaggerJsDoc(swagger);
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-app.listen(port, () => {
+io.on('connection', (socket) => {
+	console.log('a user connected', socket.id);
+});
+
+app.use('/v1/wws', (req, res) => {
+	const query = req.query
+	console.log(query)
+	io.emit('emit-statistic', query)
+	return res.status(200).json(query)
+})
+
+
+server.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 })

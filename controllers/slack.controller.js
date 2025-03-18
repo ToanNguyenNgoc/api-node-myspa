@@ -14,6 +14,7 @@ const slackController = {
         {
           channel: `${SLACK_CHANEL}`,
           text: `Đến giờ uống nước rồi. Bạn <@${SLACK_MEMBER_ID}> đi lấy nước giúp mọi người nào <!channel> ✊🥃 !`,
+          // text:'1',
           username: 'Bot Healthy 🤗'
         },
         {

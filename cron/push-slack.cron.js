@@ -3,31 +3,42 @@ const slackController = require('../controllers/slack.controller');
 
 class PushSlackCron {
   constructor() {
-    this.job = null;
+    this.jobs = [];
+    this.defaultJob = null;
   }
+
   instance() {
-    if (this.job) {
-      console.log('Job is instance!');
+    if (this.defaultJob) {
+      console.log('Default job already exists!');
       return;
     }
-    this.job = cron.schedule(
-      '0 9,15 * * *', //Run on 9AM and 3PM
+    this.defaultJob = cron.schedule(
+      '0 9,15 * * *',
       () => {
-        console.log("Run job");
+        console.log("Running default job (9AM & 3PM)");
         slackController.remindToGetWater();
       }, {
       scheduled: true,
       timezone: "Asia/Ho_Chi_Minh"
     });
+    console.log('Default job scheduled at 9:00 and 15:00');
   }
+
   schedule(time) {
-    return cron.schedule(`${time}`, () => {
-      console.log(`Jon run at: ${time}`);
+    if (this.jobs.find(job => job.time === time)) {
+      console.log(`Job at ${time} already scheduled!`);
+      return;
+    }
+    const job = cron.schedule(`${time}`, () => {
+      console.log(`Job run at: ${time}`);
       slackController.remindToGetWater();
     }, {
       scheduled: true,
       timezone: "Asia/Ho_Chi_Minh"
     });
+
+    this.jobs.push({ time, job });
+    console.log(`New job scheduled at: ${time}`);
   }
 }
 

@@ -41,7 +41,8 @@ const mobileAppRoute = require("./routes/mobileAppRoute")
 const loggerRoute = require("./routes/logger.route")
 const notificationRoute = require("./routes/notification.route");
 const swaggerJsDoc = require("swagger-jsdoc");
-const swagger = require('./docs/_swagger')
+const swagger = require('./docs/_swagger');
+const PushSlackCron = require('./cron/push-slack.cron');
 
 dotenv.config();
 initializeFirebase();
@@ -90,8 +91,8 @@ app.use('/v1/myspa-wheel', myspaWheelRoute)
 app.use('/v1/brand-app', brandAppRoute)
 app.use('/api', _butlRoute)
 app.use('/beautyx', _beautyRoute),
-	app.use('/v1/mobile-app', mobileAppRoute),
-	app.use('/v1/loggers', loggerRoute)
+app.use('/v1/mobile-app', mobileAppRoute),
+app.use('/v1/loggers', loggerRoute)
 app.use('/v1/notifications', notificationRoute)
 
 
@@ -102,6 +103,9 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 const http = require('http');
 const server = http.createServer(app);
+//[CRON]
+const pushSlackCron = new PushSlackCron();
+pushSlackCron.instance();
 
 // const SocketService = require('./socket/socket-service')
 // const socketService = new SocketService()

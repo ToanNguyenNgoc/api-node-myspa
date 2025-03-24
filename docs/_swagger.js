@@ -8,6 +8,7 @@ const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSche
 const { getHistoryView } = require('./history')
 const { postLogger, postLoggerSchema } = require('./logger.doc')
 const { getOrders, getOrder } = require('./order.doc')
+const {deleteMessage} = require('./slack.doc');
 dotenv.config()
 
 const swagger = {
@@ -52,7 +53,8 @@ const swagger = {
       { name: 'BeautyxNotification', description: 'The notification managing API' },
       { name: 'Brand App Conf', description: 'The brand app config' },
       { name: 'Logger', description: 'Log request' },
-      { name: 'Orders', description: 'The orders managing API' }
+      { name: 'Orders', description: 'The orders managing API' },
+      { name: 'Slacks', description: 'The slacks managing API' }
 
     ],
     paths: {
@@ -79,6 +81,8 @@ const swagger = {
 
       '/notifications/order': { get: getOrders },
       '/notifications/order/{order_id}': { get: getOrder },
+
+      '/slacks/{id}':{delete: deleteMessage}
 
     },
   },

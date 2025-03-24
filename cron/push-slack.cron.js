@@ -5,6 +5,7 @@ class PushSlackCron {
   constructor() {
     this.jobs = [];
     this.defaultJob = null;
+    this.defaultJobDelete = null;
   }
 
   instance() {
@@ -22,6 +23,23 @@ class PushSlackCron {
       timezone: "Asia/Ho_Chi_Minh"
     });
     console.log('Default job scheduled at 9:00 and 15:00');
+    this.deleteMessage();
+  }
+  deleteMessage(){
+    if (this.defaultJobDelete) {
+      console.log('Default delete job already exists!');
+      return;
+    }
+    this.defaultJob = cron.schedule(
+      '5 9,15 * * *',
+      () => {
+        console.log("Running default job (9:05AM & 3:05PM)");
+        slackController.deleteMessageChannel();
+      }, {
+      scheduled: true,
+      timezone: "Asia/Ho_Chi_Minh"
+    });
+    console.log('Default job scheduled delete at 9:05 and 15:05');
   }
 
   schedule(time) {

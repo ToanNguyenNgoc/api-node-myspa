@@ -22,6 +22,14 @@ const authController = {
     },
 
     loginUser: async (req, res) => {
+        const response = await axios.get(`${API_PAR}/v1/users/profile`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer 68086a0ab9332771e503e5e2|BSRxlDgnznAOHaDGdWM8`
+            },
+        })
+        res.status(200).json(response.data.context)
         try {
             const email = req.body.email
             const password = req.body.password

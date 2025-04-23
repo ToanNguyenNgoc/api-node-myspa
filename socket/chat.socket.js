@@ -12,6 +12,7 @@ class ChatSocket {
     this._API_URL = process.env.PAR_API_URL;
   }
   onRequestAPI(bearerToken) {
+    console.log(bearerToken);
     const request = axios.create({
       baseURL: this._API_URL,
       headers: {
@@ -45,7 +46,7 @@ class ChatSocket {
       const response = await this.onRequestAPI(token).get('/v1/users/profile')
       user = response.data.context;
     } catch (error) { 
-      console.log(JSON.stringify(error.response))
+      error
     }
     return user
   }

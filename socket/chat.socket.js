@@ -45,7 +45,7 @@ class ChatSocket {
       const response = await this.onRequestAPI(token).get('/v1/users/profile')
       user = response.data.context;
     } catch (error) { 
-      console.log(error.response)
+      console.log(JSON.stringify(error.response))
     }
     return user
   }

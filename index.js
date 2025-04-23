@@ -105,10 +105,6 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 const http = require('http');
 const server = http.createServer(app);
 
-// const SocketService = require('./socket/socket-service')
-// const socketService = new SocketService()
-// console.log(socketService)
-
 const { Server } = require("socket.io");
 const io = new Server(server,{
 	cors: {
@@ -117,19 +113,10 @@ const io = new Server(server,{
   }
 });
 const ChatSocket = require('./socket/chat.socket');
-const chatSocket = new ChatSocket(io);
-chatSocket.onConnect();
+const ApiMyspaSocket = require('./socket/api.myspa.socket');
 
-// io.on('connection', (socket) => {
-// 	console.log('a user connected', socket.id);
-// });
-
-// app.use('/v1/wws', (req, res) => {
-// 	const query = req.query
-// 	console.log(query)
-// 	io.emit('emit-statistic', query)
-// 	return res.status(200).json(query)
-// })
+const apiMyspaSocket = new ApiMyspaSocket(io);
+apiMyspaSocket.onConnect();
 
 
 server.listen(port, () => {

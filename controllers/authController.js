@@ -32,7 +32,7 @@ const authController = {
             })
             res.status(200).json(response.data)
         } catch (error) {
-            console.log(error)
+            console.log(35,error)
             res.status(403).json({ status: false, message: 'Login fail' })
         }
         // try {

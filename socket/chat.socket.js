@@ -18,7 +18,7 @@ class ChatSocket {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': bearerToken
+        'Authorization': `Bearer ${bearerToken}`
       },
     });
     return request;
@@ -26,7 +26,7 @@ class ChatSocket {
   async onConnect() {
     if (!this._io) return;
     this._io.on('connect', async (socket) => {
-      const bearerToken = socket.handshake.headers.authorization;
+      const bearerToken = socket.handshake.headers.authorization.split(" ")[1];
       const user = await this.onAuth(bearerToken);
       if (!user) return console.log("Authenticate Failed !");
       console.log('a user connected name, id', user?.id, user?.fullname);

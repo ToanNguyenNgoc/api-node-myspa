@@ -44,7 +44,9 @@ class ChatSocket {
     try {
       const response = await this.onRequestAPI(token).get('/v1/users/profile')
       user = response.data.context;
-    } catch (error) { }
+    } catch (error) { 
+      console.log(error.response)
+    }
     return user
   }
   async onJoinAllTopic(bearerToken, socket) {

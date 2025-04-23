@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cron":"node cron.js"
+    "cron": "node cron.js"
   },
   "keywords": [
     "toan",
@@ -50,6 +50,7 @@
     "nodemon": "^2.0.20",
     "path": "^0.12.7",
     "qs": "^6.7.0",
+    "query-string": "^9.1.1",
     "request": "^2.88.2",
     "serve-favicon": "^2.4.5",
     "set-tz": "^0.2.0",

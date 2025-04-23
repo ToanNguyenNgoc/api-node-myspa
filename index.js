@@ -109,8 +109,16 @@ const server = http.createServer(app);
 // const socketService = new SocketService()
 // console.log(socketService)
 
-// const { Server } = require("socket.io");
-// const io = new Server(server);
+const { Server } = require("socket.io");
+const io = new Server(server,{
+	cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+const ChatSocket = require('./socket/chat.socket');
+const chatSocket = new ChatSocket(io);
+chatSocket.onConnect();
 
 // io.on('connection', (socket) => {
 // 	console.log('a user connected', socket.id);

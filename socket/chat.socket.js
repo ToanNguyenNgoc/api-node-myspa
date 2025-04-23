@@ -27,7 +27,7 @@ class ChatSocket {
     this._io.on('connect', async (socket) => {
       const bearerToken = socket.handshake.headers.authorization;
       const user = await this.onAuth(bearerToken);
-      if (!user) return;
+      if (!user) return console.log("Authenticate Failed !");
       console.log('a user connected name, id', user?.id, user?.fullname);
       await this.onJoinAllTopic(bearerToken, socket);
       // Client send message to server

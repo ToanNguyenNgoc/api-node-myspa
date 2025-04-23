@@ -35,25 +35,25 @@ const authController = {
             console.log(error)
             res.status(403).json({ status: false, message: 'Login fail' })
         }
-        try {
-            const email = req.body.email
-            const password = req.body.password
-            const user = await User.findOne({ email: email })
-            if (!user) return res.status(404).json({ status: false, message: `Email ${email} is not registered !` })
-            const validPassword = await bcrypt.compare(password, user.password)
-            if (!validPassword) return res.status(403).json({ status: false, message: "Wrong password !" })
+        // try {
+        //     const email = req.body.email
+        //     const password = req.body.password
+        //     const user = await User.findOne({ email: email })
+        //     if (!user) return res.status(404).json({ status: false, message: `Email ${email} is not registered !` })
+        //     const validPassword = await bcrypt.compare(password, user.password)
+        //     if (!validPassword) return res.status(403).json({ status: false, message: "Wrong password !" })
 
-            if (user && validPassword) {
-                const token = jwt.sign({
-                    id: user.id,
-                    admin: user.admin
-                }, "TOKEN_KEY", { expiresIn: "10d" })
-                const { password, ...res_user } = user._doc
-                res.status(200).json({ status: true, context: { ...res_user, token: token } })
-            }
-        } catch (error) {
-            res.status(500).json(error)
-        }
+        //     if (user && validPassword) {
+        //         const token = jwt.sign({
+        //             id: user.id,
+        //             admin: user.admin
+        //         }, "TOKEN_KEY", { expiresIn: "10d" })
+        //         const { password, ...res_user } = user._doc
+        //         res.status(200).json({ status: true, context: { ...res_user, token: token } })
+        //     }
+        // } catch (error) {
+        //     res.status(500).json(error)
+        // }
     },
     loginBtx: async (req, res) => {
         console.log(req.body)

@@ -14,6 +14,13 @@ const Events = {
  * @property {string} telephone
  * @property {string} avatar
  */
+/**
+ * @typedef {Object} MessagePayload
+ * @property {number} msg
+ * @property {string} topic_id
+ * @property {number[]} [media_ids]
+ * @property {string[]} [media_urls]
+ */
 
 class ApiMyspaSocket {
   constructor(io) {
@@ -29,11 +36,17 @@ class ApiMyspaSocket {
       })
       //
       socket.on(Events.SEND_MSG, (payload) => {
-        this.onSendMessageToTopic(payload);
+        this.onSendMessageToTopic({
+          user: payload.user,
+          message: payload.message
+        });
       })
       //
       socket.on(Events.TYPING, (payload) => {
-        this.onTyping(payload)
+        this.onTyping({
+          user: payload.user,
+          typing: payload.typing
+        })
       })
     })
   }
@@ -42,28 +55,19 @@ class ApiMyspaSocket {
    * @param {any} typing
    */
   async onJoinAllTopic(user, topic_ids = [], socket) {
-    const { id, fullname, telephone, avatar } = user;
-    this.user = { id, fullname, telephone, avatar };
-    console.log(`User: ${JSON.stringify(this.user)} start join all topic`)
+    console.log(`User: ${JSON.stringify(user)} start join all topic`)
     topic_ids.forEach(topic_id => {
       console.log("Joined topic_id: ", `CHANNEL.${topic_id}`);
       socket.join(`CHANNEL.${topic_id}`);
     })
   }
   /**
-   * @typedef {Object} MessagePayload
-   * @property {number} msg
-   * @property {string} topic_id
-   * @property {number[]} [media_ids]
-   * @property {string[]} [media_urls]
-   */
-  /**
-   * @param {MessagePayload} message
-   */
-  async onSendMessageToTopic(message) {
-    const newMsg = Object.assign(message, { user: this.user }, {
+ * @param {{ user: User, message: MessagePayload }} params
+ */
+  async onSendMessageToTopic({ user, message }) {
+    const newMsg = Object.assign(message, { user }, {
       _id: new Date().getTime().toString(),
-      user_id: this.user.id,
+      user_id: user.id,
       reply_id: null,
       updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -79,10 +83,10 @@ class ApiMyspaSocket {
    * @property {string} topic_id
    */
   /**
-   * @param {TypingPayload} typing
-   */
-  async onTyping(typing) {
-    this._io.to(`CHANNEL.${typing.topic_id}`).emit(Events.TYPING, Object.assign(typing, { user: this.user }));
+* @param {{ user: User, typing: TypingPayload }} params
+*/
+  async onTyping({ user, typing }) {
+    this._io.to(`CHANNEL.${typing.topic_id}`).emit(Events.TYPING, Object.assign(typing, { user }));
   }
 }
 

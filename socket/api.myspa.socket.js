@@ -2,8 +2,10 @@ const moment = require('moment');
 
 const Events = {
   SUB: 'SUB',
+  SUB_TOPIC: 'SUB_TOPIC',
   SEND_MSG: 'SEND_MSG',
   LISTENER_MSG: 'LISTENER_MSG',
+  LISTENER_MSG_ORG: 'LISTENER_MSG_ORG',
   TYPING: 'TYPING'
 }
 
@@ -13,6 +15,7 @@ const Events = {
  * @property {string} fullname
  * @property {string} telephone
  * @property {string} avatar
+ * @property {string} org_id
  */
 /**
  * @typedef {Object} MessagePayload
@@ -20,6 +23,7 @@ const Events = {
  * @property {string} topic_id
  * @property {number[]} [media_ids]
  * @property {string[]} [media_urls]
+ * @property {string} org_id
  */
 
 class ApiMyspaSocket {
@@ -30,12 +34,22 @@ class ApiMyspaSocket {
     if (!this._io) return;
     this._io.on('connect', (socket) => {
       //
+      console.log(`${socket.id} connected`)
       socket.on(Events.SUB, (payload) => {
         if (!payload.user) return console.log("User is required");
         this.onJoinAllTopic(payload.user, payload.topic_ids, socket);
       })
       //
+      socket.on(Events.SUB_TOPIC, (payload) => {
+        this.onSubscribeTopic({
+          user: payload.user,
+          topic_id: payload.topic_id,
+          socket
+        })
+      })
+      //
       socket.on(Events.SEND_MSG, (payload) => {
+        console.log(payload.message);
         this.onSendMessageToTopic({
           user: payload.user,
           message: payload.message
@@ -48,7 +62,15 @@ class ApiMyspaSocket {
           typing: payload.typing
         })
       })
+      //
+      // socket.on("disconnect", (reason) => {
+      //   console.log(`${socket.id} disconnected`)
+      // });
     })
+  }
+  onDisconnect() {
+    return console.log("Disconnect !")
+    console.log(`Socket ${socket.id} disconnected. Reason: ${user.fullname}`);
   }
   /**
    * @param {User} user
@@ -59,11 +81,23 @@ class ApiMyspaSocket {
     topic_ids.forEach(topic_id => {
       console.log("Joined topic_id: ", `CHANNEL.${topic_id}`);
       socket.join(`CHANNEL.${topic_id}`);
-    })
+    });
+    if(user.org_id){
+      console.log(`Joined CI_ORG.${user.org_id}`);
+      socket.join(`CI_ORG.${user.org_id}`)
+    }
   }
+
   /**
- * @param {{ user: User, message: MessagePayload }} params
- */
+  * @param {{ user: User, topic_id: string, socket:any }} params
+  */
+  async onSubscribeTopic({ user, topic_id, socket }) {
+    return socket.join(`CHANNEL.${topic_id}`);
+  }
+
+  /**
+  * @param {{ user: User, message: MessagePayload }} params
+  */
   async onSendMessageToTopic({ user, message }) {
     const newMsg = Object.assign(message, { user }, {
       _id: new Date().getTime().toString(),
@@ -74,6 +108,10 @@ class ApiMyspaSocket {
     })
     console.log(`Send a message to: CHANNEL.${message.topic_id}`)
     this._io.to(`CHANNEL.${message.topic_id}`).emit(Events.LISTENER_MSG, newMsg);
+    if (message.org_id) {
+      console.log(`Send a message to: CI_ORG.${message.org_id}`)
+      this._io.to(`CI_ORG.${message.org_id}`).emit(Events.LISTENER_MSG_ORG, newMsg);
+    }
     return;
   }
 

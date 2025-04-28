@@ -8,7 +8,9 @@ const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSche
 const { getHistoryView } = require('./history')
 const { postLogger, postLoggerSchema } = require('./logger.doc')
 const { getOrders, getOrder } = require('./order.doc')
-const {deleteMessage} = require('./slack.doc');
+const { deleteMessage } = require('./slack.doc');
+const { getFeedbackOrgSocial, postFeedbackOrgSocial, postFeedbackOrgSocialSchema, deleteFeedbackOrgSocial } = require('./orgSocial.doc');
+
 dotenv.config()
 
 const swagger = {
@@ -36,7 +38,9 @@ const swagger = {
         loginSchema, loginBtxSchema, postTrendSchema, putTrendSchema,
         postNotificationSchema,
         postBrandAppConfSchema, putBrandAppConfSchema,
-        postLoggerSchema
+        postLoggerSchema,
+
+        postFeedbackOrgSocialSchema
       },
     },
     security: [
@@ -54,7 +58,8 @@ const swagger = {
       { name: 'Brand App Conf', description: 'The brand app config' },
       { name: 'Logger', description: 'Log request' },
       { name: 'Orders', description: 'The orders managing API' },
-      { name: 'Slacks', description: 'The slacks managing API' }
+      { name: 'Slacks', description: 'The slacks managing API' },
+      { name: 'FeedbackOrgSocials', description: 'The Feedback Org Socials API' },
 
     ],
     paths: {
@@ -82,7 +87,11 @@ const swagger = {
       '/notifications/order': { get: getOrders },
       '/notifications/order/{order_id}': { get: getOrder },
 
-      '/slacks/{id}':{delete: deleteMessage}
+      '/slacks/{id}': { delete: deleteMessage },
+
+      '/feedback-org-socials': { get: getFeedbackOrgSocial, post: postFeedbackOrgSocial },
+      '/feedback-org-socials/{id}': { delete: deleteFeedbackOrgSocial },
+
 
     },
   },

@@ -1,4 +1,5 @@
 const moment = require('moment');
+const admin = require('firebase-admin');
 
 const Events = {
   SUB: 'SUB',
@@ -25,6 +26,9 @@ const Events = {
  * @property {string[]} [media_urls]
  * @property {string} org_id
  */
+/**
+ * @property {string[]} user_ids
+ */
 
 class ApiMyspaSocket {
   constructor(io) {
@@ -49,10 +53,10 @@ class ApiMyspaSocket {
       })
       //
       socket.on(Events.SEND_MSG, (payload) => {
-        console.log(payload.message);
         this.onSendMessageToTopic({
           user: payload.user,
-          message: payload.message
+          message: payload.message,
+          user_ids: payload.user_ids || []
         });
       })
       //
@@ -82,7 +86,7 @@ class ApiMyspaSocket {
       console.log("Joined topic_id: ", `CHANNEL.${topic_id}`);
       socket.join(`CHANNEL.${topic_id}`);
     });
-    if(user.org_id){
+    if (user.org_id) {
       console.log(`Joined CI_ORG.${user.org_id}`);
       socket.join(`CI_ORG.${user.org_id}`)
     }
@@ -96,9 +100,9 @@ class ApiMyspaSocket {
   }
 
   /**
-  * @param {{ user: User, message: MessagePayload }} params
+  * @param {{ user: User, message: MessagePayload, user_ids: string[] }} params
   */
-  async onSendMessageToTopic({ user, message }) {
+  async onSendMessageToTopic({ user, message, user_ids }) {
     const newMsg = Object.assign(message, { user }, {
       _id: new Date().getTime().toString(),
       user_id: user.id,
@@ -112,6 +116,7 @@ class ApiMyspaSocket {
       console.log(`Send a message to: CI_ORG.${message.org_id}`)
       this._io.to(`CI_ORG.${message.org_id}`).emit(Events.LISTENER_MSG_ORG, newMsg);
     }
+    this.pushMessageNotification({ user, message, user_ids });
     return;
   }
 
@@ -125,6 +130,26 @@ class ApiMyspaSocket {
 */
   async onTyping({ user, typing }) {
     this._io.to(`CHANNEL.${typing.topic_id}`).emit(Events.TYPING, Object.assign(typing, { user }));
+  }
+  //Push message notification
+  async pushMessageNotification({ user, message: messageData, user_ids }) {
+    try {
+      let message = {
+        notification: {
+          title: user?.fullname || 'Tin nhắn',
+          body: messageData.media_urls?.length > 0 ? 'Đã gửi hình ảnh' : messageData?.msg,
+        },
+        data: { type: "20", payload_id: messageData.topic_id },
+        topic: ''
+      };
+      user_ids.forEach(user_id => {
+        message.topic = `com.myspa.beautyx..user_${user_id}`
+        admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    return;
   }
 }
 

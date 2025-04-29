@@ -1,8 +1,18 @@
 const OrgSocials = require('../models/orgSocial.model');
-const _context = require('../context')
+const _context = require('../context');
+const admin = require('firebase-admin')
 
 const orgSocialController = {
   get: async (req, res) => {
+    // let message = {
+    //   notification: {
+    //     title:  'Message Title',
+    //     body: 'Message Body',
+    //   },
+    //   data: {msg:"OK"},
+    //   topic: 'com.myspa.beautyx..user_2474060'
+    // };
+    // const response = await admin.messaging().send(message);
     const filter = req.query.filter
     const context = await _context.paginateHistory(req, OrgSocials, filter, { createdAt: -1 })
     return res.status(200).json({ status: true, data: { context } })

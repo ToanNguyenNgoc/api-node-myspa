@@ -1,9 +1,11 @@
 const moment = require('moment');
 const admin = require('firebase-admin');
+const ApiMyspaService = require('../services/api.myspa.service');
 
 const Events = {
   SUB: 'SUB',
   SUB_TOPIC: 'SUB_TOPIC',
+  SUB_CHAT_TOPIC: 'SUB_CHAT_TOPIC',
   SEND_MSG: 'SEND_MSG',
   LISTENER_MSG: 'LISTENER_MSG',
   LISTENER_MSG_ORG: 'LISTENER_MSG_ORG',
@@ -49,6 +51,15 @@ class ApiMyspaSocket {
           user: payload.user,
           topic_id: payload.topic_id,
           socket
+        })
+      })
+      //
+      socket.on(Events.SUB_CHAT_TOPIC, (payload) => {
+        console.l
+        ApiMyspaService.setUserIsSubscribeChatTopic({
+          user: payload.user,
+          topic_id: payload.topic?.topic_id,
+          isSubscribing: payload.topic?.isSubscribing
         })
       })
       //
@@ -133,6 +144,7 @@ class ApiMyspaSocket {
   }
   //Push message notification
   async pushMessageNotification({ user, message: messageData, user_ids }) {
+    console.log(messageData.topic_id);
     try {
       let message = {
         notification: {
@@ -142,9 +154,13 @@ class ApiMyspaSocket {
         data: { type: "20", payload_id: messageData.topic_id },
         topic: ''
       };
-      user_ids.forEach(user_id => {
-        message.topic = `com.myspa.beautyx..user_${user_id}`
-        admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
+      user_ids.forEach(async (user_id) => {
+        console.log(!!await ApiMyspaService.onCheckUserIsSubscribeChatTopic({ user_id, topic_id: messageData.topic_id }))
+        if (!await ApiMyspaService.onCheckUserIsSubscribeChatTopic({ user_id, topic_id: messageData.topic_id })) {
+          //Check user is opening chat, not push notification
+          message.topic = `com.myspa.beautyx..user_${user_id}`
+          admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
+        }
       })
     } catch (error) {
       console.log(error)

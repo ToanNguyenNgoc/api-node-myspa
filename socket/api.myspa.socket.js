@@ -155,13 +155,15 @@ class ApiMyspaSocket {
         topic: ''
       };
       user_ids.forEach(async (user_id) => {
-        console.log(!!await ApiMyspaService.onCheckUserIsSubscribeChatTopic({ user_id, topic_id: messageData.topic_id }))
         if (!await ApiMyspaService.onCheckUserIsSubscribeChatTopic({ user_id, topic_id: messageData.topic_id })) {
           //Check user is opening chat, not push notification
           message.topic = `com.myspa.beautyx..user_${user_id}`
           admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
         }
       })
+      if(user_ids.length === 0){
+        console.log("Push notification MyspaManage")
+      }
     } catch (error) {
       console.log(error)
     }

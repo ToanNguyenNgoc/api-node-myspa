@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const initializeFirebase = require('./config/firebase.config')
 const swaggerUI = require('swagger-ui-express');
-const expressListRoutes = require('express-list-routes');
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 
@@ -93,8 +92,8 @@ app.use('/v1/myspa-wheel', myspaWheelRoute)
 app.use('/v1/brand-app', brandAppRoute)
 app.use('/api', _butlRoute)
 app.use('/beautyx', _beautyRoute),
-app.use('/v1/mobile-app', mobileAppRoute),
-app.use('/v1/loggers', loggerRoute)
+	app.use('/v1/mobile-app', mobileAppRoute),
+	app.use('/v1/loggers', loggerRoute)
 app.use('/v1/notifications', notificationRoute)
 app.use('/v1/slacks', slackRoute)
 app.use('/v1/feedback-org-socials', orgSocialsRoute)
@@ -109,17 +108,18 @@ const http = require('http');
 const server = http.createServer(app);
 
 const { Server } = require("socket.io");
-const io = new Server(server,{
+const io = new Server(server, {
 	cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+		origin: "*",
+		methods: ["GET", "POST"]
+	}
 });
-const ChatSocket = require('./socket/chat.socket');
 const ApiMyspaSocket = require('./socket/api.myspa.socket');
+// const RedisClient = require('./config/redis.config');
 
 const apiMyspaSocket = new ApiMyspaSocket(io);
 apiMyspaSocket.onConnect();
+// RedisClient.onConnect();
 
 
 server.listen(port, () => {

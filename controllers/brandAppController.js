@@ -1,4 +1,4 @@
-const BrandApp = require('../models/brandApp.module')
+const BrandApp = require('../models/brandApp.module');
 
 const brandAppController = {
   addBrandApp: async (req, res) => {
@@ -12,7 +12,7 @@ const brandAppController = {
         return res.status(200).json({ data: response })
       }
     } catch (error) {
-      return response.json({ status: false, message: 'Server error' })
+      return res.json({ status: false, message: 'Server error' })
     }
   },
   updateBySubdomain: async (req, res) => {

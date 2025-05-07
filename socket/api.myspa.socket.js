@@ -163,18 +163,16 @@ class ApiMyspaSocket {
         }
       })
       if (user_ids.length === 0) {
-        if (!await ApiMyspaService.onCheckUserIsSubscribeChatTopic({ user_id, topic_id: messageData.topic_id })) {
-          axios.post(process.env.API_PUSH_NOTIFICATION_MANAGER, {
-            "msg": messageData?.msg,
-            "fullname": user?.fullname,
-            "topic_id": messageData.topic_id,
-            "media_ids": messageData.media_urls,
-            "media_urls": messageData.media_urls,
-            "org_id": messageData.org_id
-          })
-            .then(() => console.log(`Send notification org_id = ${messageData.org_id}`))
-            .catch(() => console.log(`Failed notification org_id = ${messageData.org_id}`))
-        }
+        axios.post(process.env.API_PUSH_NOTIFICATION_MANAGER, {
+          "msg": messageData?.msg,
+          "fullname": user?.fullname,
+          "topic_id": messageData.topic_id,
+          "media_ids": messageData.media_urls,
+          "media_urls": messageData.media_urls,
+          "org_id": messageData.org_id
+        })
+          .then(() => console.log(`Send notification org_id = ${messageData.org_id}`))
+          .catch(() => console.log(`Failed notification org_id = ${messageData.org_id}`))
       }
     } catch (error) {
       console.log(error)

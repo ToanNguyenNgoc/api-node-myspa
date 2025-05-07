@@ -163,7 +163,7 @@ class ApiMyspaSocket {
         }
       })
       if (user_ids.length === 0) {
-        axios.post('https://notification.beautyx.life/push-notification', {
+        axios.post(process.env.API_PUSH_NOTIFICATION_MANAGER, {
           "msg": messageData?.msg,
           "fullname": user?.fullname,
           "topic_id": messageData.topic_id,

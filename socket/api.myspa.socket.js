@@ -1,6 +1,7 @@
 const moment = require('moment');
 const admin = require('firebase-admin');
 const ApiMyspaService = require('../services/api.myspa.service');
+const axios = require('axios');
 
 const Events = {
   SUB: 'SUB',
@@ -161,8 +162,17 @@ class ApiMyspaSocket {
           admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
         }
       })
-      if(user_ids.length === 0){
-        console.log("Push notification MyspaManage")
+      if (user_ids.length === 0) {
+        axios.post('https://notification.beautyx.life/push-notification', {
+          "msg": messageData?.msg,
+          "fullname": user?.fullname,
+          "topic_id": messageData.topic_id,
+          "media_ids": messageData.media_urls,
+          "media_urls": messageData.media_urls,
+          "org_id": messageData.org_id
+        })
+          .then(() => console.log(`Send notification org_id = ${messageData.org_id}`))
+          .catch(() => console.log(`Failed notification org_id = ${messageData.org_id}`))
       }
     } catch (error) {
       console.log(error)

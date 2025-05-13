@@ -28,6 +28,7 @@ const Events = {
  * @property {number[]} [media_ids]
  * @property {string[]} [media_urls]
  * @property {string} org_id
+ * @property {string} org_domain
  */
 /**
  * @property {string[]} user_ids
@@ -160,6 +161,14 @@ class ApiMyspaSocket {
           //Check user is opening chat, not push notification
           message.topic = `com.myspa.beautyx..user_${user_id}`
           admin.messaging().send(message).then(() => console.log(`com.myspa.beautyx..user_${user_id}`)).catch(() => { });
+          if(messageData.org_domain){
+            admin.messaging().send({
+              ...message,
+              topic: `myspa-moba..${messageData.org_domain}.myspa.vn..user-${user_id}` //Push notification moba app
+            })
+            .then(()=> console.log(`Push noti: myspa-moba..${messageData.org_domain}.myspa.vn..user-${user_id}`))
+            .catch(()=> console.log(`Push failed noti: myspa-moba..${messageData.org_domain}.myspa.vn..user-${user_id}`))
+          }
         }
       })
       if (user_ids.length === 0) {

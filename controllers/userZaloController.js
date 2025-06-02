@@ -61,26 +61,28 @@ const userZaloController = {
   FCMNotification: async (req, res) => {
     try {
       const body = req.body
-      const devicesToken = await DeviceToken.find()
+      // const devicesToken = await DeviceToken.find()
       let message = {
         notification: {
           title: body.title || 'Message Title',
           body: body.description || 'Message Body',
         },
-        token: '',
-        data: body
+        // token: '',
+        data: body,
+        topic:process.env.BEAUTYX_TOPIC_GUEST
       };
-      for (var i = 0; i < devicesToken.length; i++) {
-        message.token = devicesToken[i].token
-        admin.messaging().send(message)
-          .then((response) => {
-            console.log('Successfully sent message:', response);
-          })
-          .catch(async (error) => {
-            // await DeviceToken.deleteOne({token:devicesToken[i].token})
-            console.log('Error sending message:', error);
-          });
-      }
+      admin.messaging().send(message).then().catch(()=> console.error(`Error sending message: '${process.env.BEAUTYX_TOPIC_GUEST}`));
+      // for (var i = 0; i < devicesToken.length; i++) {
+      //   message.token = devicesToken[i].token
+      //   admin.messaging().send(message)
+      //     .then((response) => {
+      //       console.log('Successfully sent message:', response);
+      //     })
+      //     .catch(async (error) => {
+      //       // await DeviceToken.deleteOne({token:devicesToken[i].token})
+      //       console.log('Error sending message:', error);
+      //     });
+      // }
       return res.json({ data: 'OK' })
     } catch (error) {
       return res.json({ status: false, message: 'Server error' })

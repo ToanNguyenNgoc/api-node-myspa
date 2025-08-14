@@ -46,7 +46,8 @@ const trendController = {
                         'tiktok': { $first: '$tiktok' }
                     }
                 },
-                { $sample: { size: count } },
+                // { $sample: { size: count } },
+                { $sort: { 'createdAt': -1 } },
                 { $skip: (page * limit) - limit },
                 { $limit: limit }
             ])

@@ -26,7 +26,7 @@ const swagger = {
         url: process.env.DOMAIN_V1,
       },
       {
-        url: process.env.DOMAIN_V1,
+        url: process.env.DOMAIN_V2,
       },
     ],
     components: {

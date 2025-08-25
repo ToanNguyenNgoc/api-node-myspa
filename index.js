@@ -41,6 +41,7 @@ const loggerRoute = require("./routes/logger.route")
 const notificationRoute = require("./routes/notification.route");
 const slackRoute = require("./routes/slackRoute");
 const orgSocialsRoute = require("./routes/orgSocial.route");
+const managerTrackingRoute = require("./routes/managerTracking.route");
 
 const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger');
@@ -97,6 +98,7 @@ app.use('/beautyx', _beautyRoute),
 app.use('/v1/notifications', notificationRoute)
 app.use('/v1/slacks', slackRoute)
 app.use('/v1/feedback-org-socials', orgSocialsRoute)
+app.use('/v1/manager-trackings', managerTrackingRoute)
 
 
 

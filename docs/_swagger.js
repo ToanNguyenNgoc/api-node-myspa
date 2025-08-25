@@ -10,6 +10,7 @@ const { postLogger, postLoggerSchema } = require('./logger.doc')
 const { getOrders, getOrder } = require('./order.doc')
 const { deleteMessage } = require('./slack.doc');
 const { getFeedbackOrgSocial, postFeedbackOrgSocial, postFeedbackOrgSocialSchema, deleteFeedbackOrgSocial } = require('./orgSocial.doc');
+const { getManagerTrackings, postManagerTracking, postManagerTrackingSchema } = require('./managerTracking.doc');
 
 dotenv.config()
 
@@ -23,10 +24,10 @@ const swagger = {
     },
     servers: [
       {
-        url: process.env.DOMAIN_V1,
+        url: process.env.DOMAIN_V2,
       },
       {
-        url: process.env.DOMAIN_V2,
+        url: process.env.DOMAIN_V1,
       },
     ],
     components: {
@@ -43,7 +44,9 @@ const swagger = {
         postBrandAppConfSchema, putBrandAppConfSchema,
         postLoggerSchema,
 
-        postFeedbackOrgSocialSchema
+        postFeedbackOrgSocialSchema,
+
+        postManagerTrackingSchema
       },
     },
     security: [
@@ -63,6 +66,7 @@ const swagger = {
       { name: 'Orders', description: 'The orders managing API' },
       { name: 'Slacks', description: 'The slacks managing API' },
       { name: 'FeedbackOrgSocials', description: 'The Feedback Org Socials API' },
+      { name: 'ManagerTracking', description: 'The Manager tracking API' },
 
     ],
     paths: {
@@ -95,7 +99,7 @@ const swagger = {
       '/feedback-org-socials': { get: getFeedbackOrgSocial, post: postFeedbackOrgSocial },
       '/feedback-org-socials/{id}': { delete: deleteFeedbackOrgSocial },
 
-
+      '/manager-trackings': { get: getManagerTrackings, post: postManagerTracking }
     },
   },
   apis: ["./routes/*.js"],

@@ -85,14 +85,16 @@ class ManagerTrackingController {
       return res.status(500).json({ status: false, message: 'Server error' });
     }
   }
-  //
+  //GROUP URL
 
   static async findOrCreateManagerUrl(api_url) {
-    const existing = await ManagerTrackingUrlModel.findOne({ url: api_url });
+    const parsedUrl = new URL(api_url);
+    const url = `${parsedUrl.origin}${parsedUrl.pathname}`;
+    const existing = await ManagerTrackingUrlModel.findOne({ url });
     if (existing) {
       return existing._id;
     }
-    const created = await ManagerTrackingUrlModel.create({ url: api_url });
+    const created = await ManagerTrackingUrlModel.create({ url });
     return created._id;
   }
 
@@ -102,7 +104,8 @@ class ManagerTrackingController {
     const sort = req.query.sort || '-_id';
     const pipeline = [
       { $lookup: { from: 'managertrackings', localField: '_id', foreignField: 'manager_tracking_url_id', as: 'items' } },
-      { $addFields: { count_item: { $size: '$items' } } }
+      { $addFields: { count_item: { $size: '$items' } } },
+      { $project: { items: Number(req.query.items || 0) } },
     ];
     //SEARCH
     if (req.query.search) {

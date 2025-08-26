@@ -21,10 +21,19 @@ const getManagerTrackingUrls = {
       description: 'Allow search url'
     },
     {
+      name: 'items',
+      in: 'query',
+      schema: {
+        type: 'string',
+        enum: ['0','1']
+      },
+      description: '0: hidden, 1: show'
+    },
+    {
       name: 'sort',
       in: 'query',
       type: 'string',
-      description: 'count_items,-count_items'
+      description: 'count_item,-count_item'
     },
   ],
   responses: {

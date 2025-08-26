@@ -10,7 +10,7 @@ const { postLogger, postLoggerSchema } = require('./logger.doc')
 const { getOrders, getOrder } = require('./order.doc')
 const { deleteMessage } = require('./slack.doc');
 const { getFeedbackOrgSocial, postFeedbackOrgSocial, postFeedbackOrgSocialSchema, deleteFeedbackOrgSocial } = require('./orgSocial.doc');
-const { getManagerTrackings, postManagerTracking, postManagerTrackingSchema } = require('./managerTracking.doc');
+const { getManagerTrackingUrls, getManagerTrackings, postManagerTracking, postManagerTrackingSchema } = require('./managerTracking.doc');
 
 dotenv.config()
 
@@ -99,6 +99,7 @@ const swagger = {
       '/feedback-org-socials': { get: getFeedbackOrgSocial, post: postFeedbackOrgSocial },
       '/feedback-org-socials/{id}': { delete: deleteFeedbackOrgSocial },
 
+      '/manager-tracking-urls': { get: getManagerTrackingUrls, },
       '/manager-trackings': { get: getManagerTrackings, post: postManagerTracking }
     },
   },

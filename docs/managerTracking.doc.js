@@ -1,3 +1,40 @@
+const getManagerTrackingUrls = {
+  tags: ['ManagerTracking'],
+  summary: 'Returns the list of all the manager tracking urls',
+  parameters: [
+    {
+      name: 'page',
+      in: 'query',
+      type: 'integer',
+      default: 1
+    },
+    {
+      name: 'limit',
+      in: 'query',
+      type: 'integer',
+      default: 15
+    },
+    {
+      name: 'search',
+      in: 'query',
+      type: 'string',
+      description: 'Allow search url'
+    },
+    {
+      name: 'sort',
+      in: 'query',
+      type: 'string',
+      description: 'count_items,-count_items'
+    },
+  ],
+  responses: {
+    '200': {
+      description: 'The list of the manager tracking urls'
+    },
+  },
+}
+
+
 const getManagerTrackings = {
   tags: ['ManagerTracking'],
   summary: 'Returns the list of all the manager trackings',
@@ -94,6 +131,7 @@ const postManagerTracking = {
 }
 
 module.exports = {
+  getManagerTrackingUrls,
   getManagerTrackings,
   postManagerTracking, postManagerTrackingSchema,
 };

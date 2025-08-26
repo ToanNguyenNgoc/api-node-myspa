@@ -14,7 +14,7 @@ class ManagerTrackingController {
 
       if (req.query.search) {
         const regex = new RegExp(req.query.search, 'i');
-        const searchableFields = ['api_url', 'id_address', 'ip_device', 'device', 'screen'];
+        const searchableFields = ['api_url', 'ip_address', 'ip_device', 'device', 'screen'];
 
         pipeline.push({
           $match: {

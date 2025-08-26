@@ -10,11 +10,24 @@ const managerTrackingScheme = mongoose.Schema({
   screen: { type: String, required: false },
   method: { type: String, required: false },
   payload: { type: String, required: false },
-  type: { type: String, required: false, default: 'API' }, //type: API | WEBVIEW
+  type: { type: String, required: false, default: 'API' },
+  manager_tracking_url_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ManagerTrackingUrl'
+  },
 }, {
   timestamps: true
 });
 
 const ManagerTrackingModel = mongoose.model("ManagerTracking", managerTrackingScheme);
 
-module.exports = ManagerTrackingModel;
+const managerTrackingUrlSchema = mongoose.Schema({
+  url: { type: String, required: false },
+});
+
+const ManagerTrackingUrlModel = mongoose.model("ManagerTrackingUrl", managerTrackingUrlSchema);
+
+module.exports = {
+  ManagerTrackingUrlModel,
+  ManagerTrackingModel,
+};

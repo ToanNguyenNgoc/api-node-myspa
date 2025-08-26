@@ -86,10 +86,13 @@ class ManagerTrackingController {
   static async post(req, res) {
     try {
       const body = req.body;
+      const parsedUrl = new URL(api_url);
+      const url = `${parsedUrl.origin}${parsedUrl.pathname}`;
       const manager_tracking_url_id = await ManagerTrackingController.findOrCreateManagerUrl(body.api_url);
 
       const context = await ManagerTrackingModel.create({
         ...body,
+        api_url: url,
         manager_tracking_url_id,
       });
 

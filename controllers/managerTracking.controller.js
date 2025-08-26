@@ -36,6 +36,28 @@ class ManagerTrackingController {
         pipeline.push({ $match: { type: req.query.type } });
       }
 
+      if (req.query.start || req.query.end) {
+        const dateFilter = {};
+
+        if (req.query.start) {
+          const start = new Date(req.query.start); // Ex: "2025-07-26 13:55:25"
+          if (!isNaN(start.getTime())) {
+            dateFilter.$gte = start;
+          }
+        }
+
+        if (req.query.end) {
+          const end = new Date(req.query.end); // Ex: "2025-08-27 00:00:00"
+          if (!isNaN(end.getTime())) {
+            dateFilter.$lte = end;
+          }
+        }
+
+        if (Object.keys(dateFilter).length > 0) {
+          pipeline.push({ $match: { createdAt: dateFilter } });
+        }
+      }
+
       pipeline.push({ $sort: { createdAt: -1 } });
       pipeline.push({
         $facet: {
@@ -101,9 +123,31 @@ class ManagerTrackingController {
   static async getManagerTrackingUrls(req, res) {
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 30;
-    const sort = req.query.sort || '-_id';
+    const sort = req.query.sort || '-count_item';
+    const startDate = req.query.start ? new Date(req.query.start) : null;
+    const endDate = req.query.end ? new Date(req.query.end) : null;
+    if (endDate) endDate.setHours(23, 59, 59, 999);
     const pipeline = [
-      { $lookup: { from: 'managertrackings', localField: '_id', foreignField: 'manager_tracking_url_id', as: 'items' } },
+      {
+        $lookup: {
+          from: 'managertrackings',
+          let: { urlId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$manager_tracking_url_id', '$$urlId'] },
+                    ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
+                    ...(endDate ? [{ $lte: ['$createdAt', endDate] }] : []),
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'items'
+        }
+      },
       { $addFields: { count_item: { $size: '$items' } } },
       { $project: { items: Number(req.query.items || 0) } },
     ];
@@ -118,6 +162,8 @@ class ManagerTrackingController {
         }
       });
     }
+    //DATE
+
     //SORT
     const sortField = sort.replace(/^-/, '');
     const sortOrder = sort.startsWith('-') ? -1 : 1;

@@ -25,7 +25,7 @@ const getManagerTrackingUrls = {
       in: 'query',
       schema: {
         type: 'string',
-        enum: ['0','1']
+        enum: ['0', '1']
       },
       description: '0: hidden, 1: show'
     },
@@ -34,6 +34,18 @@ const getManagerTrackingUrls = {
       in: 'query',
       type: 'string',
       description: 'count_item,-count_item'
+    },
+    {
+      name: 'start',
+      in: 'query',
+      type: 'string',
+      description: 'Example: 2025-07-26 13:55:25'
+    },
+    {
+      name: 'end',
+      in: 'query',
+      type: 'string',
+      description: 'Example: 2025-08-27 00:00:00'
     },
   ],
   responses: {
@@ -89,7 +101,19 @@ const getManagerTrackings = {
         enum: ['API', 'WEBVIEW']
       },
       description: 'Get list of the manager trackings by type'
-    }
+    },
+    {
+      name: 'start',
+      in: 'query',
+      type: 'string',
+      description: 'Example: 2025-07-26 13:55:25'
+    },
+    {
+      name: 'end',
+      in: 'query',
+      type: 'string',
+      description: 'Example: 2025-08-27 00:00:00'
+    },
   ],
   responses: {
     '200': {

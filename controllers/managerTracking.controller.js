@@ -8,7 +8,8 @@ class ManagerTrackingController {
     try {
       const page = req.query.page ? parseInt(req.query.page) : 1;
       const limit = req.query.limit ? parseInt(req.query.limit) : 30;
-
+      const start_date = req.query.start;
+      const end_date = req.query.end;
       const pipeline = [];
 
       if (req.query.search) {
@@ -36,26 +37,17 @@ class ManagerTrackingController {
         pipeline.push({ $match: { type: req.query.type } });
       }
 
-      if (req.query.start || req.query.end) {
+      if (start_date || end_date) {
         const dateFilter = {};
-
-        if (req.query.start) {
-          const start = new Date(req.query.start); // Ex: "2025-07-26 13:55:25"
-          if (!isNaN(start.getTime())) {
-            dateFilter.$gte = start;
-          }
+        if (start_date) {
+          dateFilter.$gte = new Date(start_date);
         }
-
-        if (req.query.end) {
-          const end = new Date(req.query.end); // Ex: "2025-08-27 00:00:00"
-          if (!isNaN(end.getTime())) {
-            dateFilter.$lte = end;
-          }
+        if (end_date) {
+          const end = new Date(end_date);
+          end.setHours(23, 59, 59, 999);
+          dateFilter.$lte = end;
         }
-
-        if (Object.keys(dateFilter).length > 0) {
-          pipeline.push({ $match: { createdAt: dateFilter } });
-        }
+        pipeline.push({ $match: { createdAt: dateFilter } });
       }
 
       pipeline.push({ $sort: { createdAt: -1 } });
@@ -121,78 +113,82 @@ class ManagerTrackingController {
   }
 
   static async getManagerTrackingUrls(req, res) {
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit) : 30;
-    const sort = req.query.sort || '-count_item';
-    const startDate = req.query.start ? new Date(req.query.start) : null;
-    const endDate = req.query.end ? new Date(req.query.end) : null;
-    if (endDate) endDate.setHours(23, 59, 59, 999);
-    const pipeline = [
-      {
-        $lookup: {
-          from: 'managertrackings',
-          let: { urlId: '$_id' },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ['$manager_tracking_url_id', '$$urlId'] },
-                    ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
-                    ...(endDate ? [{ $lte: ['$createdAt', endDate] }] : []),
-                  ]
+    try {
+      const page = req.query.page ? parseInt(req.query.page) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit) : 30;
+      const sort = req.query.sort || '-count_item';
+      const startDate = req.query.start ? new Date(`${req.query.start}T00:00:00.000Z`) : null;
+      const endDate = req.query.end ? new Date(`${req.query.end}T23:59:59.999Z`) : null;
+      if (endDate) endDate.setHours(23, 59, 59, 999);
+      const pipeline = [
+        {
+          $lookup: {
+            from: 'managertrackings',
+            let: { urlId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$manager_tracking_url_id', '$$urlId'] },
+                      ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
+                      ...(endDate ? [{ $lte: ['$createdAt', endDate] }] : []),
+                    ]
+                  }
                 }
               }
-            }
-          ],
-          as: 'items'
-        }
-      },
-      { $addFields: { count_item: { $size: '$items' } } },
-      { $project: { items: Number(req.query.items || 0) } },
-    ];
-    //SEARCH
-    if (req.query.search) {
-      const regex = new RegExp(req.query.search, 'i');
+            ],
+            as: 'items'
+          }
+        },
+        { $addFields: { count_item: { $size: '$items' } } },
+        { $project: { items: Number(req.query.items || 0) } },
+      ];
+      //SEARCH
+      if (req.query.search) {
+        const regex = new RegExp(req.query.search, 'i');
+        pipeline.push({
+          $match: {
+            $or: ['url'].map(field => ({
+              [field]: { $regex: regex }
+            }))
+          }
+        });
+      }
+      //DATE
+
+      //SORT
+      const sortField = sort.replace(/^-/, '');
+      const sortOrder = sort.startsWith('-') ? -1 : 1;
+      pipeline.push({ $sort: { [sortField]: sortOrder } });
+      //PAGINATE
       pipeline.push({
-        $match: {
-          $or: ['url'].map(field => ({
-            [field]: { $regex: regex }
-          }))
+        $facet: {
+          list: [
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+          ],
+          total: [{ $count: 'count' }],
+        },
+      });
+      const data = await ManagerTrackingUrlModel.aggregate(pipeline);
+      const list = data[0]?.list || [];
+      const total = data[0]?.total?.[0]?.count || 0;
+      return res.status(200).json({
+        status: true,
+        data: {
+          context: {
+            data: list,
+            current_page: page,
+            per_page: limit,
+            total,
+            total_page: Math.ceil(total / limit),
+          }
         }
       });
+    } catch (error) {
+      return res.status(500).json({ status: false, message: 'Server error' });
     }
-    //DATE
-
-    //SORT
-    const sortField = sort.replace(/^-/, '');
-    const sortOrder = sort.startsWith('-') ? -1 : 1;
-    pipeline.push({ $sort: { [sortField]: sortOrder } });
-    //PAGINATE
-    pipeline.push({
-      $facet: {
-        list: [
-          { $skip: (page - 1) * limit },
-          { $limit: limit },
-        ],
-        total: [{ $count: 'count' }],
-      },
-    });
-    const data = await ManagerTrackingUrlModel.aggregate(pipeline);
-    const list = data[0]?.list || [];
-    const total = data[0]?.total?.[0]?.count || 0;
-    return res.status(200).json({
-      status: true,
-      data: {
-        context: {
-          data: list,
-          current_page: page,
-          per_page: limit,
-          total,
-          total_page: Math.ceil(total / limit),
-        }
-      }
-    });
   }
 }
 module.exports = ManagerTrackingController;

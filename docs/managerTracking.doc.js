@@ -39,13 +39,13 @@ const getManagerTrackingUrls = {
       name: 'start',
       in: 'query',
       type: 'string',
-      description: 'Example: 2025-07-26 13:55:25'
+      description: 'Example: 2025-07-26'
     },
     {
       name: 'end',
       in: 'query',
       type: 'string',
-      description: 'Example: 2025-08-27 00:00:00'
+      description: 'Example: 2025-08-27'
     },
   ],
   responses: {
@@ -106,13 +106,13 @@ const getManagerTrackings = {
       name: 'start',
       in: 'query',
       type: 'string',
-      description: 'Example: 2025-07-26 13:55:25'
+      description: 'Example: 2025-07-26'
     },
     {
       name: 'end',
       in: 'query',
       type: 'string',
-      description: 'Example: 2025-08-27 00:00:00'
+      description: 'Example: 2025-08-27'
     },
   ],
   responses: {

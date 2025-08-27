@@ -1,5 +1,6 @@
 const {
   ManagerTrackingUrlModel,
+  ManagerTrackingUrlCounterModel,
   ManagerTrackingModel
 } = require('../models/manager-tracking.model');
 
@@ -89,6 +90,7 @@ class ManagerTrackingController {
       const parsedUrl = new URL(body.api_url);
       const url = `${parsedUrl.origin}${parsedUrl.pathname}`;
       const manager_tracking_url_id = await ManagerTrackingController.findOrCreateManagerUrl(body.api_url);
+      await ManagerTrackingController.handleManagerTrackingCounter(manager_tracking_url_id);
 
       const context = await ManagerTrackingModel.create({
         ...body,
@@ -123,10 +125,34 @@ class ManagerTrackingController {
       const startDate = req.query.start ? new Date(`${req.query.start}T00:00:00.000Z`) : null;
       const endDate = req.query.end ? new Date(`${req.query.end}T23:59:59.999Z`) : null;
       if (endDate) endDate.setHours(23, 59, 59, 999);
+      // const pipeline = [
+      //   {
+      //     $lookup: {
+      //       from: 'managertrackings',
+      //       let: { urlId: '$_id' },
+      //       pipeline: [
+      //         {
+      //           $match: {
+      //             $expr: {
+      //               $and: [
+      //                 { $eq: ['$manager_tracking_url_id', '$$urlId'] },
+      //                 ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
+      //                 ...(endDate ? [{ $lte: ['$createdAt', endDate] }] : []),
+      //               ]
+      //             }
+      //           }
+      //         }
+      //       ],
+      //       as: 'items'
+      //     }
+      //   },
+      //   { $addFields: { count_item: { $size: '$items' } } },
+      //   { $project: { items: Number(req.query.items || 0) } },
+      // ];
       const pipeline = [
         {
           $lookup: {
-            from: 'managertrackings',
+            from: 'managertrackingcounters',
             let: { urlId: '$_id' },
             pipeline: [
               {
@@ -144,8 +170,19 @@ class ManagerTrackingController {
             as: 'items'
           }
         },
-        { $addFields: { count_item: { $size: '$items' } } },
-        { $project: { items: Number(req.query.items || 0) } },
+        {
+          $addFields: {
+            count: {
+              $reduce: {
+                input: '$items',
+                initialValue: 0,
+                in: {
+                  $add: ['$$value', { $ifNull: ['$$this.count', 0] }]
+                }
+              }
+            }
+          }
+        }
       ];
       //SEARCH
       if (req.query.search) {
@@ -192,6 +229,47 @@ class ManagerTrackingController {
     } catch (error) {
       return res.status(500).json({ status: false, message: 'Server error' });
     }
+  }
+
+  static async handleManagerTrackingCounter(manager_tracking_url_id) {
+    try {
+      const today = new Date();
+      const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+      const existingCounter = await ManagerTrackingUrlCounterModel.findOne({
+        manager_tracking_url_id,
+        createdAt: { $gte: startOfDay, $lte: endOfDay }
+      });
+      if (existingCounter) {
+        await ManagerTrackingUrlCounterModel.updateOne(
+          { _id: existingCounter._id },
+          { $inc: { count: 1 } }
+        );
+      } else {
+        await ManagerTrackingUrlCounterModel.create({
+          manager_tracking_url_id,
+          count: 1
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async getSeedManagerTrackingUrlCounter(req, res) {
+    const pipeline = [
+      { $lookup: { from: 'managertrackings', localField: '_id', foreignField: 'manager_tracking_url_id', as: 'items' } },
+      { $addFields: { count_item: { $size: '$items' } } },
+      { $project: { items: 0 } },
+    ];
+    const data = await ManagerTrackingUrlModel.aggregate(pipeline);
+    await Promise.all(data.map((item) => {
+      ManagerTrackingUrlCounterModel.create({
+        manager_tracking_url_id: item._id,
+        count: item.count_item
+      })
+    }))
+    return res.status(200).json(data);
   }
 }
 module.exports = ManagerTrackingController;

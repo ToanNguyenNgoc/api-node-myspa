@@ -18,16 +18,26 @@ const managerTrackingScheme = mongoose.Schema({
 }, {
   timestamps: true
 });
-
 const ManagerTrackingModel = mongoose.model("ManagerTracking", managerTrackingScheme);
-
+//
 const managerTrackingUrlSchema = mongoose.Schema({
   url: { type: String, required: false },
 });
 
 const ManagerTrackingUrlModel = mongoose.model("ManagerTrackingUrl", managerTrackingUrlSchema);
+//
+const managerTrackingCounterSchema = mongoose.Schema({
+  manager_tracking_url_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ManagerTrackingUrl'
+  },
+  count: { type: Number, required: false }
+}, { timestamps: true });
+
+const ManagerTrackingUrlCounterModel = mongoose.model("ManagerTrackingCounter", managerTrackingCounterSchema);
 
 module.exports = {
   ManagerTrackingUrlModel,
+  ManagerTrackingUrlCounterModel,
   ManagerTrackingModel,
 };

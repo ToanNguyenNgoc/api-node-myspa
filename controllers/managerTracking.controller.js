@@ -177,7 +177,7 @@ class ManagerTrackingController {
                 input: '$items',
                 initialValue: 0,
                 in: {
-                  $add: ['$$value', { $ifNull: ['$$this.count_item', 0] }]
+                  $add: ['$$value', { $ifNull: ['$$this.count', 0] }]
                 }
               }
             }

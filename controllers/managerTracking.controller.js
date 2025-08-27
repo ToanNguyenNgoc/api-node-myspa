@@ -172,12 +172,12 @@ class ManagerTrackingController {
         },
         {
           $addFields: {
-            count: {
+            count_item: {
               $reduce: {
                 input: '$items',
                 initialValue: 0,
                 in: {
-                  $add: ['$$value', { $ifNull: ['$$this.count', 0] }]
+                  $add: ['$$value', { $ifNull: ['$$this.count_item', 0] }]
                 }
               }
             }

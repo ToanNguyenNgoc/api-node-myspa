@@ -62,7 +62,7 @@ class ManagerTrackingController {
         },
       });
 
-      const data = await ManagerTrackingModel.aggregate(pipeline);
+      const data = await ManagerTrackingModel.aggregate(pipeline).allowDiskUse(true);
       const list = data[0]?.list || [];
       const total = data[0]?.total?.[0]?.count || 0;
 
@@ -211,7 +211,7 @@ class ManagerTrackingController {
           total: [{ $count: 'count' }],
         },
       });
-      const data = await ManagerTrackingUrlModel.aggregate(pipeline);
+      const data = await ManagerTrackingUrlModel.aggregate(pipeline).allowDiskUse(true);
       const list = data[0]?.list || [];
       const total = data[0]?.total?.[0]?.count || 0;
       return res.status(200).json({

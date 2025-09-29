@@ -6,7 +6,7 @@ const recaptchaMiddleware = {
     if (!recaptcha || recaptcha === '') {
       return res.status(401).send({ statusCode: 401, message: 'Recaptcha is required' })
     }
-    if (recaptcha === process.env.RECAPTCHA_SITE_KEY_HARD_CODE) {
+    if (recaptcha === process.env.RECAPTCHA_APP_CLIENT_RECAPTCHA) {
       next()
     } else {
       const secretKey = process.env.RECAPTCHA_SITE_KEY_SERVER;

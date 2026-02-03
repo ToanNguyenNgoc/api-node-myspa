@@ -34,7 +34,33 @@ const postLogger = {
   }
 }
 
+const postLoggerError = {
+  tags: ['Logger'],
+  summary: 'Post new logger',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  requestBody: {
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/postLoggerSchema',
+        },
+      },
+    },
+    required: true,
+  },
+  responses: {
+    '200': {
+      description: 'Logger'
+    },
+  }
+}
+
 module.exports = {
   postLoggerSchema,
-  postLogger
+  postLogger,
+  postLoggerError,
 }

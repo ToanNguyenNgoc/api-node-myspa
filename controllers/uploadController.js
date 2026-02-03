@@ -1,7 +1,22 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
 const MediaModel = require('../models/media.model');
+const Jimp = require("jimp");
+const QrCode = require("qrcode-reader");
 const { cloudinaryConfigOptions } = require('../config/cloudinary.config')
+
+async function decodeQrFromBuffer(buffer) {
+  const img = await Jimp.read(buffer);
+  const qr = new QrCode();
+
+  return new Promise((resolve, reject) => {
+    qr.callback = (err, value) => {
+      if (err) return reject(err);
+      resolve(value ? value.result : null);
+    };
+    qr.decode(img.bitmap);
+  });
+}
 
 const uploadController = {
   media: async (req, res) => {
@@ -16,9 +31,22 @@ const uploadController = {
         size: req.file.size,
         original_url: `${process.env.HOST}/media/${req.file.filename}`,
         disk: req.file.destination
-      })
-      const data = await newMedia.save()
-      res.status(200).json({ status: true, data: data })
+      });
+      let qrValue = null;
+      if (req.file.mimetype) {
+        try {
+          const buffer = req.file.buffer;
+          console.log(req.file);
+          if (buffer) {
+            qrValue = await decodeQrFromBuffer(buffer);
+          }
+        } catch (e) {
+          console.log("QR decode failed:", e.message);
+        }
+      }
+      console.log(qrValue);
+      const data = await newMedia.save();
+      res.status(200).json({ status: true, data: data });
     } catch (error) {
       res.status(400).send({ status: false, message: '' })
     }

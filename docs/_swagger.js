@@ -1,12 +1,12 @@
 const dotenv = require('dotenv')
-const { login, loginBtx, loginBtxSchema, loginSchema } = require('./auth')
+const { login, loginBtxSchema, loginSchema } = require('./auth')
 const { getTrends, getTrend, postTrend, putTrend, postTrendSchema, putTrendSchema } = require('./trend')
 const { getTrendComments, getRefreshTrend } = require('./trendComments')
 const { postNotification, postNotificationSchema } = require('./beautyxNotification')
 const { uploadMedia, uploadMultipleMedia, uploadMediaCloudinary } = require('./upload')
 const { getBrandAppConf, postBrandAppConf, putBrandAppConf, postBrandAppConfSchema, putBrandAppConfSchema } = require('./brandAppConf')
 const { getHistoryView } = require('./history')
-const { postLogger, postLoggerSchema } = require('./logger.doc')
+const { postLogger, postLoggerSchema, postLoggerError } = require('./logger.doc')
 const { getOrders, getOrder } = require('./order.doc')
 const { deleteMessage } = require('./slack.doc');
 const { getFeedbackOrgSocial, postFeedbackOrgSocial, postFeedbackOrgSocialSchema, deleteFeedbackOrgSocial } = require('./orgSocial.doc');
@@ -21,6 +21,10 @@ const swagger = {
       title: "Beautyx trends API Docs",
       version: "1.0.0",
       description: "Beautyx trends API Docs",
+    },
+    swaggerOptions:{
+      persistAuthorization: true,
+      docExpansion:'none',
     },
     servers: [
       {
@@ -90,6 +94,7 @@ const swagger = {
       '/brand-app/{subdomain}': { get: getBrandAppConf, put: putBrandAppConf },
 
       '/loggers': { post: postLogger },
+      '/loggers/error': { post: postLoggerError },
 
       '/notifications/order': { get: getOrders },
       '/notifications/order/{order_id}': { get: getOrder },

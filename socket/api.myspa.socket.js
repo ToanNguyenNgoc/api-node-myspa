@@ -153,7 +153,7 @@ class ApiMyspaSocket {
           title: user?.fullname || 'Tin nhắn',
           body: messageData.media_urls?.length > 0 ? 'Đã gửi hình ảnh' : messageData?.msg,
         },
-        data: { type: "20", payload_id: messageData.topic_id },
+        data: { type: "20", payload_type: "20", payload_id: messageData.topic_id },
         topic: ''
       };
       user_ids.forEach(async (user_id) => {

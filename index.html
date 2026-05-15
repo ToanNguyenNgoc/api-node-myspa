@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body>
+    <p>Đang chuyển đến trang thanh toán production...</p>
+    <form id="sepay_form" method="POST" action="https://pay.sepay.vn/v1/checkout/init">
+        <input type="hidden" name="operation" value="PURCHASE" />
+        <input type="hidden" name="payment_method" value="BANK_TRANSFER" />
+        <input type="hidden" name="order_invoice_number" value="1775202659738" />
+        <input type="hidden" name="order_amount" value="4000" />
+        <input type="hidden" name="currency" value="VND" />
+        <input type="hidden" name="order_description" value="Thanh toan don hang DH: 1775202659738" />
+        <input type="hidden" name="success_url" value="https://example.com/order/DH123?payment=success&amp;orderId=1775202659738" />
+        <input type="hidden" name="error_url" value="https://example.com/order/DH123?payment=error&amp;orderId=1775202659738" />
+        <input type="hidden" name="cancel_url" value="https://example.com/order/DH123?payment=cancel&amp;orderId=1775202659738" />
+        <input type="hidden" name="merchant" value="SP-LIVE-NNA47745" />
+        <input type="hidden" name="signature" value="MBaVqrZHMUk48Fmm52gG/XYddx92b+PseOoyqUB09SI=" />
+        <noscript><button type="submit">Tiếp tục</button></noscript>
+    </form>
+    <script>
+        document.getElementById('sepay_form').submit();
+    </script>
+</body>
+
+</html>

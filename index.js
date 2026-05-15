@@ -44,6 +44,7 @@ const orgSocialsRoute = require("./routes/orgSocial.route");
 const managerTrackingRoute = require("./routes/managerTracking.route");
 const ManagerTrackingUrlRoute = require("./routes/managerTrackingUrl.route");
 const toolRoute = require("./routes/toolRoute");
+const SepayRoute = require("./routes/SepayRoute");
 
 const swaggerJsDoc = require("swagger-jsdoc");
 const swagger = require('./docs/_swagger');
@@ -103,6 +104,7 @@ app.use('/v1/feedback-org-socials', orgSocialsRoute)
 app.use('/v1/manager-tracking-urls', ManagerTrackingUrlRoute)
 app.use('/v1/manager-trackings', managerTrackingRoute)
 app.use('/v1/tools', toolRoute);
+app.use('/v1/sepay', SepayRoute);
 
 
 
